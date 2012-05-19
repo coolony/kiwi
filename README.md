@@ -1,4 +1,6 @@
-# What is this?
+# Kiwi
+
+## What is this?
 
 Kiwi is a cool JavaScript template engine lovingly built from the ground up for Node.js with performance, extensibility, modularity and security in mind. It is compatible with most of [jQuery templates](http://api.jquery.com/category/plugins/templates/) syntax, and adds lots of features to it. This means Kiwi is:
 
@@ -12,7 +14,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Secure**. All output is escaped by default.
 * **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects
 
-# Syntax
+## Syntax
 
 ```html
 <!DOCTYPE html>
@@ -32,21 +34,21 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 </html>
 ```
 
-# Installation
+## Installation
 
-## Latest release
+### Latest release
 
 ```bash
 npm install kiwi
 ```
 
-## Development version (may not be suited for production [yet])
+### Development version (may not be suited for production [yet])
 
 ```bash
 npm install https://github.com/coolony/kiwi/tarball/master
 ```
 
-# Usage
+## Usage
 
 ```javascript
 var kiwi = require('kiwi');
@@ -57,11 +59,11 @@ new kiwi.Template(template).render({name: "Kiwi"}, function onRendered(err, rend
 });
 ```
 
-# Available tags
+## Available tags
 
-## ${}
+### ${}
 
-### Basic usage
+#### Basic usage
 
 The `${varOrExpression}` tag inserts the value of `varOrExpression` in the template. This is a shortcut for `{{= varOrExpression}}`.
 
@@ -78,7 +80,7 @@ new Template(tpl).render({a: 'kiwi'}, callback);
 <div>kiwi</div>
 ```
 
-### Filter support
+#### Filter support
 
 The `${}` tag optionally supports filters. This is an addition to jQuery Templates syntax.
 
@@ -93,7 +95,7 @@ new Template(tpl).render({a: 'kiwi'}, callback);
 <div>wiwi</div>
 ```
 
-### Escaping by default
+#### Escaping by default
 
 The `${}` tag escapes its output by default.
 
@@ -121,9 +123,9 @@ new Template(tpl).render({a: '<b>kiwi</b>'}, callback);
 <div><b>kiwi</b></div>
 ```
 
-## {{if}}
+### {{if}}
 
-### Basic usage
+#### Basic usage
 
 Used for conditional insertion of content. Renders the content between the opening and closing template tags only if the specified data item field, JavaScript function or expression does not evaluate to false (or to zero, null, type "undefined", or the empty string).
 
@@ -140,7 +142,7 @@ new Template(tpl).render({show:true}, callback);
 <div></div>
 ```
 
-### Alternatives
+#### Alternatives
 
 `{{else}}` can be used in association with the `{{if}}` tag to provide alternative content based on the values of one or more expressions. The `{{else}}` tag can be used without a parameter, as in `{{if a}}...{{else}}...{{/if}}`, or with a parameter, as in `{{if a}}...{{else b}}...{{/if}}`.
 
@@ -155,9 +157,9 @@ new Template(tpl).render({a: 1, b: 2}, callback);
 <div>Kiwi</div>
 ```
 
-## {{each}}
+### {{each}}
 
-### Basic usage
+#### Basic usage
 
 Used to iterate over a data array, and render the content between the opening and closing template tags once for each data item.
 
@@ -179,7 +181,7 @@ new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
 </ul>
 ```
 
-### Index and parameter support
+#### Index and parameter support
 
 The block of template markup between the opening and closing tags `{{each}}` and `{{/each}}` is rendered once for each data item in the data array. Within this block the `{{each}}` template tag exposes the current index and value as additional template variables $index and $value. These default variable names can be changed by passing in index and value parameters to the `{{each}}` template tag, as in the following example:
 
@@ -201,7 +203,7 @@ new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
 </ul>
 ```
 
-### Loop counters
+#### Loop counters
 
 By default, Kiwi sets a number of variables available within the loop:
 
@@ -232,7 +234,7 @@ new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
 </ul>
 ```
 
-### Empty clause
+#### Empty clause
 
 The `{{each}}` tag can take an optional `{{ empty }}` clause that will be displayed if the given collection is empty:
 
@@ -255,7 +257,7 @@ new Template(tpl).render({movies: []}, callback);
 </ul>
 ```
 
-## {{tmpl}}
+### {{tmpl}}
 
 Used for composition of templates. Renders a nested template from a string within the rendered output of the parent template.
 
@@ -270,7 +272,7 @@ new Template(tpl).render({nested: '${a}', a: 'Kiwi'}, callback);
 <div>Kiwi</div>
 ```
 
-## {{include}}
+### {{include}}
 
 Used for composition of templates. Loads a nested template from disk and renders it within the rendered output of the parent template.
 
@@ -288,7 +290,7 @@ new Template(tpl).render({}, callback);
 <div>Hello!</div>
 ```
 
-## {{block}}
+### {{block}}
 
 Used to set separate blocks in your template. This can be used to extract specific portions of your template after rendering, or in combination with `{{extend}}` tag:
 
@@ -307,7 +309,7 @@ Result: <div>Kiwi</div>
 Foo: Kiwi
 ```
 
-## {{extend}}
+### {{extend}}
 
 Makes the current template extend another template loaded from disk.
 
@@ -326,7 +328,7 @@ new Template(tpl).render({}, callback);
 <div>Hello, kiwi!</div>
 ```
 
-## {{raw}}
+### {{raw}}
 
 The compiler won't anything between `{{raw}}` and `{{/raw}}`. This can be useful if you want some parts of your template to be rendered on the client.
 
@@ -343,7 +345,7 @@ new Template(tpl).render({}, callback);
 <div>${a}</div>
 ```
 
-## {{#}} and {{comment}}
+### {{#}} and {{comment}}
 
 These tags are comments, which are never rendered.
 
@@ -358,7 +360,7 @@ new Template(tpl).render({}, callback);
 Kiwi
 ```
 
-# Available filters
+## Available filters
 
 * escape
 * capitalize
@@ -386,7 +388,7 @@ Kiwi
 * relativedate
 * timeago
 
-# Express 3.x compatibility
+## Express 3.x compatibility
 
 Kiwi works out of the box with [Express](http://expressjs.com) 3.x. Here is a (very) basic example:
 
@@ -403,7 +405,7 @@ app.get('/', function(req, res){
 app.listen(3000);
 ```
 
-# Performance tips
+## Performance tips
 
 * **Use cache in production**
 * **Use strict mode**  
@@ -417,7 +419,7 @@ It is included for compatibility with jQuery templates / jqTpl, but you should p
 Kiwi adds counters to `each` loop, which allows you, for example, to access the current iteration count with `_eachLoop.counter`. If you don't need this functionality, disabling it will slightly increase Kiwi's performance when using `each` loops.
 
 
-# License
+## License
 
 **Kiwi is released under an MIT license**
 
