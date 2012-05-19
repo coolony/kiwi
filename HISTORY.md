@@ -2,4 +2,4 @@
 
 ## Head
 
-* Added `createSimpleTag` function to help extending Kiwi
+* Added `createSimpleTag` and `createFilter` functions to help extending Kiwi
