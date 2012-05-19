@@ -23,6 +23,8 @@ ${objt|lower|json|raw}
 ${objn|lower|json|raw}
 ${one + 1}
 ${one|add(1)}
+${one|incr}
+${one|decr}
 ${one|subtract(1)}
 ${one|mul(5)}
 ${three|div(2)}
