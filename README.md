@@ -12,7 +12,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Robust**. Kiwi is carefully tested before any change is pushed to the repository.
 * **Full-featured**. Lots of filters are available, and it can't be easier to add your own if you want.
 * **Secure**. All output is escaped by default.
-* **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects
+* **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects.
 
 ## Syntax
 
@@ -50,12 +50,26 @@ npm install https://github.com/coolony/kiwi/tarball/master
 
 ## Usage
 
+### Loading a template from string
+
 ```javascript
 var kiwi = require('kiwi');
 
 var template = '<p>Hello, ${name}!</p>';
 new kiwi.Template(template).render({name: "Kiwi"}, function onRendered(err, rendered) {
   console.log('Rendered template is: ' + rendered);
+});
+```
+
+### Loading a template from disk
+
+```javascript
+var kiwi = require('kiwi');
+
+var template = new kiwi.Template().loadFile('template.kiwi', function onLoaded(err) {
+  template.render({name: "Kiwi"}, function onRendered(err, rendered) {
+    console.log('Rendered template is: ' + rendered);
+  });
 });
 ```
 
