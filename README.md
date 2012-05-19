@@ -9,7 +9,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Completely asynchronous**. You have the absolute guarantee that not a single blocking call will be done after Kiwi has been initialized.
 * **Easily extensible**. Three short lines of code are enough to create a new tag.
 * **Incredibly powerful**, even for advanced features. Want dynamic template inheritance? Access individual block contents? Done!
-* **Easy to set up**. One line of code and you can get started on [Express](http://expressjs.com) 3.x. You can even directly use your existing jQuery or [jqTpl](https://github.com/kof/node-jqtpl) templates.
+* **Easy to set up**. One line of code and you can get started on [Express](http://expressjs.com) 3.x. In most cases, you can even use your existing jQuery or [jqTpl](https://github.com/kof/node-jqtpl) templates without modification.
 * **Robust**. Kiwi is carefully tested before any change is pushed to the repository.
 * **Full-featured**. Lots of filters are available, and it can't be easier to add your own if you want.
 * **Secure**. All output is escaped by default.
@@ -100,7 +100,7 @@ new Template(tpl).render({a: 'kiwi'}, callback);
 
 #### Filter support
 
-The `${}` tag optionally supports filters. This is an addition to jQuery Templates syntax.
+The `${}` tag optionally supports filters.
 
 ```
 // Template
