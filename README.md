@@ -466,7 +466,7 @@ It's as simple as that.
 You can also create new filters with the same awsomeness. Let's say you want to create a new `prepend` filter. Three lines are enough:
 
 ```javascript
-tools.createFilter('prepend', function(str, thing) {
+kiwi.tools.createFilter('prepend', function(str, thing) {
   return thing + str;
 });
 ```
