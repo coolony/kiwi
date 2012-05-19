@@ -430,7 +430,7 @@ app.listen(3000);
 
 ### Create tags
 
-Did we say that Kiwi was extensible with no more than 3 lines of code? Well, we didn't lie. For example, say you want to create a new tag `{{cap}}` that will capitalize its argument. Here is the only thing you'd need to do:
+Did we say that Kiwi was extensible with no more than 3 lines of code? Well, we didn't lie. For example, say you want to create a new tag `{{cap}}` which will capitalize its argument. Here is the only thing you'd need to do:
 
 ```javascript
 kiwi.tools.createSimpleTag('cap', function(context, name) {
@@ -451,7 +451,7 @@ new Template(tpl).render({}, callback);
 <div>KIWI</div>
 ```
 
-For better security, just like with the `${}` tag, all output of custom tags defined that way is escaped by default. If you want your tag to input raw HTML in your document, you can mark the output as safe. For example, let's say you want to create a `{{css}}` tag that will render a `<link>` tag in your document:
+For better security, just like with the `${}` tag, all output of custom tags defined that way is escaped by default. If you want your tag to input raw HTML in your document, you can mark the output as safe. For example, let's say you want to create a `{{css}}` tag which will render a `<link>` tag in your document:
 
 ```javascript
 kiwi.tools.createSimpleTag('css', function(context, name) {
