@@ -398,8 +398,8 @@ var app = express.createServer();
 	
 app.set('view engine', 'kiwi');
 
-app.get('/', function(req, res){
-    res.render('index', {});
+app.get('/', function(req, res) {
+  res.render('index', {});
 });
 
 app.listen(3000);
