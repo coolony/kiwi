@@ -1,0 +1,1 @@
+foo {{block ext1}}bar{{/block}} woo {{block ext2}}loo{{/block}}

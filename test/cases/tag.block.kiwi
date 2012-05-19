@@ -1,0 +1,2 @@
+{{block foo1}}bar{{/block}}
+{{block foo2}}${name}{{/block}}

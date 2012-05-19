@@ -1,0 +1,4 @@
+{{verbatim}}${name}{{/verbatim}}
+foo {{verbatim}}{{if t}}hello, "kiwi!"{{/if}}{{/verbatim}} bar
+{{raw}}${name}{{/raw}}
+foo {{raw}}{{if t}}hello, "kiwi!"{{/if}}{{/raw}} bar

@@ -1,0 +1,2 @@
+{{extend "root.kiwi"}}
+{{block ext1}}doo{{/block}}

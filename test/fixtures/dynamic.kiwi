@@ -1,0 +1,2 @@
+{{extend parent}}
+{{block ext2}}moo{{/block}}

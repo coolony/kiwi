@@ -1,0 +1,2 @@
+{{include "../fixtures/root.kiwi"}}
+{{include "../fixtures/leaf"}}

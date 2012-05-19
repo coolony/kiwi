@@ -1,0 +1,2 @@
+foo{{comment}}bar{{/comment}}loo
+{{# some comment here}}
