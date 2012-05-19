@@ -6,6 +6,7 @@ ${true}
 ${html}
 ${html2}
 ${html3}
+${safeHtml}
 ${html|raw}
 ${html2|raw}
 ${html3|raw}

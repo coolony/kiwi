@@ -1,5 +1,6 @@
 # Kiwi
 
+
 ## What is this?
 
 Kiwi is a cool JavaScript template engine lovingly built from the ground up for Node.js with performance, extensibility, modularity and security in mind. It is compatible with most of [jQuery Template](http://api.jquery.com/category/plugins/templates/) syntax, and adds lots of features to it. This means Kiwi is:
@@ -13,6 +14,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Full-featured**. Lots of filters are available, and it can't be easier to add your own if you want.
 * **Secure**. All output is escaped by default.
 * **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects.
+
 
 ## Syntax
 
@@ -33,6 +35,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
   </body>
 </html>
 ```
+
 
 ## Installation
 
@@ -72,6 +75,7 @@ var template = new kiwi.Template().loadFile('template.kiwi', function onLoaded(e
   });
 });
 ```
+
 
 ## Available tags
 
@@ -374,6 +378,7 @@ new Template(tpl).render({}, callback);
 Kiwi
 ```
 
+
 ## Available filters
 
 * escape
@@ -402,6 +407,7 @@ Kiwi
 * relativedate
 * timeago
 
+
 ## Express 3.x compatibility
 
 Kiwi works out of the box with [Express](http://expressjs.com) 3.x. Here is a (very) basic example:
@@ -409,7 +415,7 @@ Kiwi works out of the box with [Express](http://expressjs.com) 3.x. Here is a (v
 ```javascript
 var express = require('express');
 var app = express.createServer();
-	
+
 app.set('view engine', 'kiwi');
 
 app.get('/', function(req, res) {
@@ -419,17 +425,77 @@ app.get('/', function(req, res) {
 app.listen(3000);
 ```
 
+
+## Extensibility
+
+### Create tags
+
+Did we say that Kiwi was extensible with no more than 3 lines of code? Well, we didn't lie. For example, say you want to create a new tag `{{cap}}` that will capitalize its argument. Here is the only thing you'd need to do:
+
+```javascript
+kiwi.tools.createSimpleTag('cap', function(context, name) {
+  return name.toUpperCase();
+});
+```
+
+You can then use your new tag as any other:
+
+```
+// Template
+<div>{{cap "kiwi"}}</div>
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+<div>KIWI</div>
+```
+
+For better security, just like with the `${}` tag, all output of custom tags defined that way is escaped by default. If you want your tag to input raw HTML in your document, you can mark the output as safe. For example, let's say you want to create a `{{css}}` tag that will render a `<link>` tag in your document:
+
+```javascript
+kiwi.tools.createSimpleTag('css', function(context, name) {
+  return kiwi.tools.safe('<link rel="stylesheet" type="text/css" src="' + name + '">');
+});
+```
+
+It's as simple as that.
+
+### Create filters
+
+You can also create new filters with the same awsomeness. Let's say you want to create a new `prepend` filter. Three lines are enough:
+
+```javascript
+tools.createFilter('prepend', function(str, thing) {
+  return thing + str;
+});
+```
+
+You can then use your new filter as any other:
+
+```
+// Template
+<div>${name|prepend("Hello, ")}</div>
+
+// Code
+new Template(tpl).render({name: 'Kiwi'}, callback);
+
+// Result
+<div>Hello, Kiwi</div>
+```
+
+
 ## Performance tips
 
 * **Use cache in production**
-* **Use strict mode**  
-You can disable strict mode in order to make Kiwi comply with jQuery template / jqTpl behaviour. However, this will result in using a bunch of `try…catch` blocks in the compiled templates, which will definitely lower Kiwi's performance.   
+* **Use strict mode**
+You can disable strict mode in order to make Kiwi comply with jQuery template / jqTpl behaviour. However, this will result in using a bunch of `try…catch` blocks in the compiled templates, which will definitely lower Kiwi's performance.
 Strict mode is enabled by default.
-* **Avoid using `tmpl`**   
-In order to avoid memory leaks when using heavily dynamic templates in `tmpl`, this tag uses `CappedCache` by default, isolated from the main cache. As a result, if your nested templates are heavily dynamic, a new complete compiler stack is likely to be started each time a `tmpl` tag is met.   
-You may choose to use a standard cache instead, but be aware that this could easily lead to huge memory leaks if your nested templates are heavily dynamic.   
+* **Avoid using `tmpl`**
+In order to avoid memory leaks when using heavily dynamic templates in `tmpl`, this tag uses `CappedCache` by default, isolated from the main cache. As a result, if your nested templates are heavily dynamic, a new complete compiler stack is likely to be started each time a `tmpl` tag is met.
+You may choose to use a standard cache instead, but be aware that this could easily lead to huge memory leaks if your nested templates are heavily dynamic.
 It is included for compatibility with jQuery templates / jqTpl, but you should probably not use it at all.
-* **Consider disabling `eachLoopCounters`**   
+* **Consider disabling `eachLoopCounters`**
 Kiwi adds counters to `each` loop, which allows you, for example, to access the current iteration count with `_eachLoop.counter`. If you don't need this functionality, disabling it will slightly increase Kiwi's performance when using `each` loops.
 
 

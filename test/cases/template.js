@@ -6,7 +6,7 @@
 
 
 var should = require('should');
-var Template = require('../lib/template');
+var Template = require('../../lib/template');
 
 describe('Template', function() {
   describe('constructor', function() {
@@ -61,14 +61,14 @@ describe('Template', function() {
     });
 
     it('should load template', function(done) {
-      template.loadFile(__dirname + '/fixtures/hello.kiwi', function(err, data) {
+      template.loadFile(__dirname + '/../fixtures/hello.kiwi', function(err, data) {
         data.should.equal('<p class="hello">Hello ${name}!</p>');
         done();
       });
     });
 
     it('should return an error when the file doesn\'t exist', function(done) {
-      template.loadFile(__dirname + '/fixtures/goodbye.kiwi', function(err, data) {
+      template.loadFile(__dirname + '/../fixtures/goodbye.kiwi', function(err, data) {
         should.exist(err);
         done();
       });
@@ -98,7 +98,7 @@ describe('Template', function() {
   describe('#render', function() {
     it('should render loaded template', function(done) {
       var template = new Template();
-      template.loadFile(__dirname + '/fixtures/hello.kiwi', function(err, data) {
+      template.loadFile(__dirname + '/../fixtures/hello.kiwi', function(err, data) {
         template.render({name: 'Kiwi'}, function(err, compiled) {
           if(err) throw err;
           compiled.should.equal('<p class="hello">Hello Kiwi!</p>');
@@ -129,7 +129,7 @@ describe('Template', function() {
     
       function lookup(name, template, callback) {
         calls++;
-        callback(null, __dirname + '/fixtures/root.kiwi');
+        callback(null, __dirname + '/../fixtures/root.kiwi');
       }
       
       function onLoaded(err, data) {
@@ -145,7 +145,7 @@ describe('Template', function() {
       }
     
       template.options.lookup = lookup;
-      template.loadFile(__dirname + '/fixtures/intermediate.kiwi', onLoaded);
+      template.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onLoaded);
     });
     
     it('should delegate lookup error to hander', function(done) {
@@ -165,7 +165,7 @@ describe('Template', function() {
       }
     
       template.options.lookup = lookup;
-      template.loadFile(__dirname + '/fixtures/intermediate.kiwi', onLoaded);
+      template.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onLoaded);
     });
   });
 });

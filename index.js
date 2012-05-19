@@ -4,4 +4,4 @@
  * MIT Licensed
  */
 
-module.exports = require('./lib/kiwi')
+module.exports = require('./lib/kiwi');

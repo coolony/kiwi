@@ -10,6 +10,7 @@
  */
 
 var kiwi = require('../');
+var tools = kiwi.tools;
 var fs = require('fs');
 var basename = require('path').basename;
 var should = require('should');
@@ -32,6 +33,7 @@ var TEST_DATA = {
   html: '<p>kiwi</p>',
   html2: '<p class="moo">kiwi</p>',
   html3: '<p class=\'moo\'>kiwi</p>',
+  safeHtml: tools.safe('<p class="moo">kiwi</p>'),
   objt: {foo:'bar'},
   objm: {foo:'bar', woo:'loo'},
   objn: {foo:10},
