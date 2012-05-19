@@ -386,6 +386,23 @@ Kiwi
 * relativedate
 * timeago
 
+# Express 3.x compatibility
+
+Kiwi works out of the box with [Express](http://expressjs.com) 3.x. Here is a (very) basic example:
+
+```javascript
+var express = require('express');
+var app = express.createServer();
+	
+app.set('view engine', 'kiwi');
+
+app.get('/', function(req, res){
+    res.render('index', {});
+});
+
+app.listen(3000);
+```
+
 # Performance tips
 
 * **Use cache in production**
