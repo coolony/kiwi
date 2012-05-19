@@ -2,7 +2,7 @@
 
 ## What is this?
 
-Kiwi is a cool JavaScript template engine lovingly built from the ground up for Node.js with performance, extensibility, modularity and security in mind. It is compatible with most of [jQuery templates](http://api.jquery.com/category/plugins/templates/) syntax, and adds lots of features to it. This means Kiwi is:
+Kiwi is a cool JavaScript template engine lovingly built from the ground up for Node.js with performance, extensibility, modularity and security in mind. It is compatible with most of [jQuery Template](http://api.jquery.com/category/plugins/templates/) syntax, and adds lots of features to it. This means Kiwi is:
 
 * **Fast**. Insanely fast.
 * **Completely asynchronous**. You have the absolute guarantee that not a single blocking call will be done after Kiwi has been initialized.
