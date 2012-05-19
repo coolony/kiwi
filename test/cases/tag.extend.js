@@ -13,7 +13,7 @@ describe('Extend tag', function() {
   var template;
 
   beforeEach(function() {
-    template = new Template();
+    template = new Template({cache: true});
   });
 
   it('should extend template', function(done) {
@@ -76,7 +76,6 @@ describe('Extend tag', function() {
     }
 
     template.options.lookup = lookupTemplate;
-    template.options.cache = true;
     template._getCache().dirty();
     template.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onLoaded);
   });

@@ -59,6 +59,42 @@ new kiwi.Template(template).render({name: "Kiwi"}, function onRendered(err, rend
 });
 ```
 
+## Available tags
+
+### ${}
+
+#### Basic usage
+
+The `${varOrExpression}` tag inserts the value of `varOrExpression` in the template. This is a shortcut for `{{= varOrExpression}}`.
+
+```
+// Template
+<div>${a}</div>
+<div>{{= a}}</div>
+
+// Code
+new Template(tpl).render({a: 'kiwi'}, callback);
+
+// Result
+<div>kiwi</div>
+<div>kiwi</div>
+```
+
+#### Filter support
+
+The `${}` tag optionally supports filters. This is an addition to jQuery Templates syntax.
+
+```
+// Template
+<div>${a|replace('k', 'w')|capitalize}</div>
+
+// Code
+new Template(tpl).render({a: 'kiwi'}, callback);
+
+// Result
+<div>wiwi</div>
+```
+
 ## Available filters
 
 * escape
