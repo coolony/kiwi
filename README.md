@@ -16,7 +16,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects.
 
 
-## Syntax
+## Syntax example
 
 ```html
 <!DOCTYPE html>
