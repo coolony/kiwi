@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "uglify-js": "*"
   },
   "keywords": ["kiwi", "asynchronous", "template", "web", "express", "engine", "html"],
     "repository": "git://github.com/coolony/kiwi",

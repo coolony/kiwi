@@ -5,3 +5,5 @@
  */
 
 module.exports = require('./lib/kiwi');
+
+var loo = 'foo';
