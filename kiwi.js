@@ -2114,7 +2114,11 @@ Template.prototype.render = function(data, callback) {
  */
 
 Template.prototype._renderCompiled = function onRendered(data, callback) {
-  this._compiled(this, TEMPLATE_EXPORTS, _, data, token.helpers, callback);
+  try {
+    this._compiled(this, TEMPLATE_EXPORTS, _, data, token.helpers, callback);
+  } catch(err) {
+    callback(err);
+  }
 }
 
 
