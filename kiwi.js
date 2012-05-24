@@ -1419,9 +1419,9 @@ var ELSE_PARSE_RE = /^else(?:\s+(.*))?$/;
  */
 
 module.exports.tags = {};
-var ifTag = module.exports.tags.if = {};
+var ifTag = module.exports.tags['if'] = {};
 var intermediateTags = ifTag.intermediateTags = {};
-var elseTag = intermediateTags.else = {};
+var elseTag = intermediateTags['else'] = {};
 
 
 /**
