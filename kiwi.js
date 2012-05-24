@@ -234,7 +234,7 @@ Compiler.prototype._tokenize = function(source, callback) {
   // Ensure we are at root level
   if(rootToken !== currentToken) {
     return callback(new Error(  'Tokenization error: unexpected end of file, '
-                              + 'expedted `'
+                              + 'expected `'
                               + currentToken.tag.tagName
                               + '`.')
                               );
@@ -465,12 +465,12 @@ var utils = require('../utils');
  * @api private
  */
 
-module.exports.escape = function(input) {
+exports.escape = function(input) {
   if(input === null || input === undefined) return '';
   if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.escape(value);
+      acc[key] = exports.escape(value);
     });
     return acc;
   }
@@ -486,12 +486,12 @@ module.exports.escape = function(input) {
  * @api private
  */
 
-module.exports.escapeIfUnsafe = function(input) {
+exports.escapeIfUnsafe = function(input) {
   if(input === null || input === undefined) return '';
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.escapeIfUnsafe(value);
+      acc[key] = exports.escapeIfUnsafe(value);
     });
     return acc;
   }
@@ -507,11 +507,11 @@ module.exports.escapeIfUnsafe = function(input) {
  * @api private
  */
 
-module.exports.capitalize = function(input) {
+exports.capitalize = function(input) {
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.capitalize(value);
+      acc[key] = exports.capitalize(value);
     });
     return acc;
   }
@@ -528,11 +528,11 @@ module.exports.capitalize = function(input) {
  * @api private
  */
 
-module.exports.upper = function(input) {
+exports.upper = function(input) {
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.upper(value);
+      acc[key] = exports.upper(value);
     });
     return acc;
   }
@@ -548,11 +548,11 @@ module.exports.upper = function(input) {
  * @api private
  */
 
-module.exports.lower = function(input) {
+exports.lower = function(input) {
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.lower(value);
+      acc[key] = exports.lower(value);
     });
     return acc;
   }
@@ -568,7 +568,7 @@ module.exports.lower = function(input) {
  * @api private
  */
 
-module.exports.json = function(input) {
+exports.json = function(input) {
   return JSON.stringify(input);
 }
 
@@ -582,11 +582,11 @@ module.exports.json = function(input) {
  * @api private
  */
 
-module.exports.add = function(input, operand) {
+exports.add = function(input, operand) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.add(value, operand);
+      acc[key] = exports.add(value, operand);
     });
     return acc;
   }
@@ -603,8 +603,8 @@ module.exports.add = function(input, operand) {
  * @api private
  */
 
-module.exports.subtract = function(input, operand) {
-  return module.exports.add(input, -parseInt(operand));
+exports.subtract = function(input, operand) {
+  return exports.add(input, -parseInt(operand));
 }
 
 
@@ -617,11 +617,11 @@ module.exports.subtract = function(input, operand) {
  * @api private
  */
 
-module.exports.mul = function(input, operand) {
+exports.mul = function(input, operand) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.mul(value, operand);
+      acc[key] = exports.mul(value, operand);
     });
     return acc;
   }
@@ -638,11 +638,11 @@ module.exports.mul = function(input, operand) {
  * @api private
  */
 
-module.exports.div = function(input, operand) {
+exports.div = function(input, operand) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.div(value, operand);
+      acc[key] = exports.div(value, operand);
     });
     return acc;
   }
@@ -658,8 +658,8 @@ module.exports.div = function(input, operand) {
  * @api private
  */
 
-module.exports.incr = function(input, operand) {
-  return module.exports.add(input, 1);
+exports.incr = function(input, operand) {
+  return exports.add(input, 1);
 }
 
 
@@ -671,8 +671,8 @@ module.exports.incr = function(input, operand) {
  * @api private
  */
 
-module.exports.decr = function(input, operand) {
-  return module.exports.add(input, -1);
+exports.decr = function(input, operand) {
+  return exports.add(input, -1);
 }
 
 
@@ -684,11 +684,11 @@ module.exports.decr = function(input, operand) {
  * @api private
  */
 
-module.exports.round = function(input) {
+exports.round = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.round(value, operand);
+      acc[key] = exports.round(value, operand);
     });
     return acc;
   }
@@ -704,11 +704,11 @@ module.exports.round = function(input) {
  * @api private
  */
 
-module.exports.floor = function(input) {
+exports.floor = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.floor(value, operand);
+      acc[key] = exports.floor(value, operand);
     });
     return acc;
   }
@@ -724,11 +724,11 @@ module.exports.floor = function(input) {
  * @api private
  */
 
-module.exports.ceil = function(input) {
+exports.ceil = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.ceil(value, operand);
+      acc[key] = exports.ceil(value, operand);
     });
     return acc;
   }
@@ -745,11 +745,11 @@ module.exports.ceil = function(input) {
  * @api private
  */
 
-module.exports.cut = function(input, needle) {
+exports.cut = function(input, needle) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.cut(value, needle);
+      acc[key] = exports.cut(value, needle);
     });
     return acc;
   }
@@ -765,11 +765,11 @@ module.exports.cut = function(input, needle) {
  * @api private
  */
 
-module.exports.addslashes = function(input) {
+exports.addslashes = function(input) {
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.capitalize(value);
+      acc[key] = exports.capitalize(value);
     });
     return acc;
   }
@@ -789,11 +789,11 @@ module.exports.addslashes = function(input) {
  * @api private
  */
 
-module.exports.stripslashes = function(input) {
+exports.stripslashes = function(input) {
    if(utils.isIterable(input)) {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = module.exports.capitalize(value);
+      acc[key] = exports.capitalize(value);
     });
     return acc;
   }
@@ -813,7 +813,7 @@ module.exports.stripslashes = function(input) {
  * @api private
  */
 
-module.exports.first = function (input) {
+exports.first = function (input) {
   if(typeof input === 'object' && !_.isArray(input)) return '';
   if(_.isString(input)) return input.substr(0, 1);
   return _.first(input);
@@ -828,7 +828,7 @@ module.exports.first = function (input) {
  * @api private
  */
 
-module.exports.last = function (input) {
+exports.last = function (input) {
   if(typeof input === 'object' && !_.isArray(input)) return '';
   if(_.isString(input)) return input.slice(-1);
   return _.last(input);
@@ -843,7 +843,7 @@ module.exports.last = function (input) {
  * @api private
  */
 
-module.exports.length = function (input) {
+exports.length = function (input) {
   if(typeof input === 'object') return _.keys(input).length;
   return input.length;
 };
@@ -857,7 +857,7 @@ module.exports.length = function (input) {
  * @api private
  */
 
-module.exports.reverse = function (input) {
+exports.reverse = function (input) {
   if(_.isArray(input)) return input.reverse();
   return input;
 };
@@ -872,7 +872,7 @@ module.exports.reverse = function (input) {
  * @api private
  */
 
-module.exports.join = function (input, separator) {
+exports.join = function (input, separator) {
   if(_.isArray(input)) return input.join(separator);
   if(typeof input === 'object') {
     var acc = [];
@@ -893,7 +893,7 @@ module.exports.join = function (input, separator) {
  * @api private
  */
 
-module.exports.urlencode = function(input) {
+exports.urlencode = function(input) {
   return encodeURIComponent(input);
 };
 
@@ -907,7 +907,7 @@ module.exports.urlencode = function(input) {
  */
 
 
-module.exports.urldecode = function(input) {
+exports.urldecode = function(input) {
   return decodeURIComponent(input);
 };
 
@@ -922,9 +922,16 @@ module.exports.urldecode = function(input) {
  * @api private
  */
 
-module.exports.replace = function(input, search, replacement, flags) {
+exports.replace = function(input, search, replacement, flags) {
   return input.replace(new RegExp(search, flags), replacement);
 };
+
+
+/**
+ * Module exports
+ */
+ 
+module.exports = exports;
 
 }); // module: filters/base.js
 
@@ -950,7 +957,7 @@ require.register("filters/datetime.js", function(module, exports, require){
  * @api private
  */
 
-module.exports.timeago = function(input) {
+exports.timeago = function(input) {
   return moment(input).fromNow();
 }
 
@@ -963,7 +970,7 @@ module.exports.timeago = function(input) {
  * @api private
  */
 
-module.exports.relativedate = function(input) {
+exports.relativedate = function(input) {
   return moment(input).calendar();
 }
 
@@ -977,10 +984,16 @@ module.exports.relativedate = function(input) {
  * @api private
  */
 
-module.exports.date = function(input, pattern) {
+exports.date = function(input, pattern) {
   return moment(input).format(pattern);
 }
 
+
+/**
+ * Module exports
+ */
+ 
+module.exports = exports;
 }); // module: filters/datetime.js
 
 require.register("kiwi.js", function(module, exports, require){
@@ -995,14 +1008,14 @@ require.register("kiwi.js", function(module, exports, require){
  * Module dependencies
  */
 
-var Template = module.exports.Template = require('./template');
+var Template = exports.Template = require('./template');
 
 
 /**
  * Exports
  */
 
-module.exports.tools = require('./tools');
+exports.tools = require('./tools');
 
 
 
@@ -1011,8 +1024,14 @@ module.exports.tools = require('./tools');
  * Version
  */
 
-module.exports.version = '0.1.2';
+exports.version = '0.1.2';
 
+
+/**
+ * Module exports
+ */
+ 
+module.exports = exports;
 }); // module: kiwi.js
 
 require.register("tags/block.js", function(module, exports, require){
@@ -1941,7 +1960,8 @@ require.register("template.js", function(module, exports, require){
  * Module dependencies
  */
 
-var Cache = CappedCache = require('./cache');
+var Cache = require('./cache');
+var CappedCache = Cache;
 
 var utils = require('./utils');
 var token = require('./token');
@@ -2216,7 +2236,7 @@ Template.prototype._cacheKey = function() {
  * Module exports
  */
 
-module.exports = Template;
+exports = module.exports = Template;
 
 }); // module: template.js
 
@@ -2556,7 +2576,7 @@ IntermediateToken.prototype.lookupTag = function(tag) {
  * Module exports
  */
 
-module.exports = {
+exports = module.exports = {
   headDeclarations: [],
   BaseToken: BaseToken,
   RootToken: RootToken,
@@ -2565,11 +2585,11 @@ module.exports = {
   LeafToken: LeafToken,
   LiteralToken: LiteralToken
 }
-var headDeclarations = module.exports.headDeclarations = [];
-var footDeclarations = module.exports.footDeclarations = [];
-var tags = module.exports.tags = {};
-var tagBeforeProcessors = module.exports.tagBeforeProcessors = [];
-var helpers = module.exports.helpers = {};
+var headDeclarations = exports.headDeclarations = [];
+var footDeclarations = exports.footDeclarations = [];
+var tags = exports.tags = {};
+var tagBeforeProcessors = exports.tagBeforeProcessors = [];
+var helpers = exports.helpers = {};
 
 
 /*
@@ -2616,6 +2636,8 @@ if(typeof window !== 'undefined') {
   loadTags(acc);
 }
 
+
+
 }); // module: token.js
 
 require.register("tools.js", function(module, exports, require){
@@ -2649,7 +2671,7 @@ var ARGS_SPLIT_RE = /\s+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
  * @api public
  */
 
-module.exports.createSimpleTag = function createSimpleTag(name, fn) {
+exports.createSimpleTag = function createSimpleTag(name, fn) {
   token.helpers[name] = fn;
   token.tags[name] = {
     compile: function(token, compiledContents, compiler, callback) {
@@ -2675,7 +2697,7 @@ module.exports.createSimpleTag = function createSimpleTag(name, fn) {
  * @api public
  */
 
-module.exports.createFilter = function createFilter(name, fn) {
+exports.createFilter = function createFilter(name, fn) {
   filter.filters[name] = fn;
 }
 
@@ -2688,7 +2710,7 @@ module.exports.createFilter = function createFilter(name, fn) {
  * @api public
  */
 
-var escape = module.exports.escape = function(str) {
+var escape = exports.escape = function(str) {
   return str.toString()
             .replace(/&/g, "&amp;")
             .replace(/"/g, "&quot;")
@@ -2706,7 +2728,7 @@ var escape = module.exports.escape = function(str) {
  * @api public
  */
 
-module.exports.safe = function(str) {
+exports.safe = function(str) {
   if(!(str instanceof String)) str = new String(str);
   str.safe = true;
   return str;
@@ -2721,10 +2743,16 @@ module.exports.safe = function(str) {
  * @api public
  */
 
-module.exports.escapeIfUnsafe = function(str) {
+exports.escapeIfUnsafe = function(str) {
   return str.safe ? str : escape(str);
 }
 
+
+/**
+ * Module exports
+ */
+ 
+module.exports = exports;
 }); // module: tools.js
 
 require.register("utils.js", function(module, exports, require){
@@ -2806,7 +2834,7 @@ var asyncForEach = frame ? frame.asyncForEach : tmpAsyncForEach;
  * @api private
  */
 
-var apply = module.exports.apply = function(input, processor, args, callback) {
+var apply = exports.apply = function(input, processor, args, callback) {
 
   if(typeof args === 'function' && !callback) {
     callback = args;
@@ -2833,7 +2861,7 @@ var apply = module.exports.apply = function(input, processor, args, callback) {
  * @api private
  */
 
-module.exports.applyAll = function(input, processors, args, callback) {
+exports.applyAll = function(input, processors, args, callback) {
 
   function applyOne(processor, next) {
     apply(input, processor, args || [], function onApplied(err, result) {
@@ -2884,7 +2912,7 @@ function compileTokenArray(tokens, compiler, callback) {
 
   asyncForEach(tokens, compileOne, done);
 }
-module.exports.compileTokenArray = compileTokenArray;
+exports.compileTokenArray = compileTokenArray;
 
 
 /**
@@ -2896,7 +2924,7 @@ module.exports.compileTokenArray = compileTokenArray;
  * @api private
  */
 
-module.exports.compileTokens = function(tokens, compiler, callback) {
+exports.compileTokens = function(tokens, compiler, callback) {
   compileTokenArray(tokens, compiler, function(err, compiled) {
     if(err) return callback(err);
     callback(null, compiled.join(''));
@@ -2912,7 +2940,7 @@ module.exports.compileTokens = function(tokens, compiler, callback) {
  * @api private
  */
 
-module.exports.escapeCompiledString = function(str) {
+exports.escapeCompiledString = function(str) {
   return str.replace(/([\\"])/g, '\\$1')
             .replace(/\n/g, '\\n')
             .replace(/\r/g, '\\r')
@@ -2928,7 +2956,7 @@ module.exports.escapeCompiledString = function(str) {
  * @api private
  */
 
-module.exports.isIterable = function(input) {
+exports.isIterable = function(input) {
   return typeof input === 'object' && !(input instanceof String)
 }
 
@@ -2943,7 +2971,7 @@ module.exports.isIterable = function(input) {
  * @api public
  */
 
-module.exports.extend = function(subclass, superclass) {
+exports.extend = function(subclass, superclass) {
   function Dummy(){}
   Dummy.prototype = superclass.prototype;
   subclass.prototype = new Dummy();
@@ -2951,6 +2979,13 @@ module.exports.extend = function(subclass, superclass) {
   subclass._superclass = superclass;
   subclass._superproto = superclass.prototype;
 }
+
+
+/**
+ * Module exports
+ */
+ 
+module.exports = exports;
 }); // module: utils.js
 
 window.kiwi = require("kiwi");
