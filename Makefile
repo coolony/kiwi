@@ -11,6 +11,11 @@ kiwi.js: $(SRC)
 
 kiwi.min.js: kiwi.js
 	@$(UGLIFY) $< > $@ \
+		&& rm -f /tmp/kiwi.min.js \
+		&& cat support/license.min.js > /tmp/kiwi.min.js \
+		&& echo "" >> /tmp/kiwi.min.js \
+		&& cat kiwi.min.js >> /tmp/kiwi.min.js \
+		&& mv /tmp/kiwi.min.js . \
 		&& du kiwi.min.js \
 		&& du kiwi.js
 
