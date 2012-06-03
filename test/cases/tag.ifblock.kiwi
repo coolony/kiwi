@@ -1,0 +1,3 @@
+{{block foo}}bar{{/block}}
+{{ifblock notexisting}}hoo{{/ifblock}}
+{{ifblock foo}}woo{{/ifblock}}
