@@ -1,0 +1,4 @@
+{{as foo}}Hello!{{/as}}${foo}
+{{as woo}}<b>Kiwi</b>{{/as}}${woo}
+{{as roo}}YAY{{/as}}
+{{block test}}{{as boo}}D'oh!{{/as}}{{/block}}${boo}
