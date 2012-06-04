@@ -3,11 +3,4 @@
 {{if one == 2}}hidden{{else}}Else (true){{/if}}
 {{if one == 1}}Else (false){{else}}hidden{{/if}}
 {{if one == 3}}hidden{{else two == 5}}hidden{{else three == 3}}Else (with condition true){{else}}hidden{{/if}}
-{{     if    one    ==  5  }}
-hidden
-{{        else     one ==  2     }}
-hidden
-{{   else }}
-With lots of whitespace
-{{       /   if             }}
 {{if true}}{{if one == 1}}{{if false}}hidden{{else}}Nested if{{/if}}{{/if}}{{/if}}
