@@ -40,7 +40,7 @@ As an additional feature, you can use Kiwi in client mode, with – almost – a
 ```
 
 
-## Installation
+## Server-side installation
 
 ### Latest release
 
@@ -78,6 +78,10 @@ var template = new kiwi.Template().loadFile('template.kiwi', function onLoaded(e
   });
 });
 ```
+
+### Client-side dependencies
+
+Please note that client-side usage requires [Underscore.js](http://underscorejs.org/) to be included in the page. This requirement will be removed in a future release.
 
 
 ## Available tags
