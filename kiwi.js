@@ -1008,6 +1008,7 @@ require.register("kiwi.js", function(module, exports, require){
  * Module dependencies
  */
 
+
 var Template = exports.Template = require('./template');
 
 
@@ -1030,9 +1031,75 @@ exports.version = '0.1.2';
 /**
  * Module exports
  */
- 
+
 module.exports = exports;
 }); // module: kiwi.js
+
+require.register("tags/as.js", function(module, exports, require){
+/*!
+ * Coolony's Kiwi
+ * Copyright ©2012 Pierre Matri <pierre.matri@coolony.com>
+ * MIT Licensed
+ */
+
+
+/**
+ * Constants
+ */
+
+var AS_PARSE_RE = /^as\s+([^\s]+)$/;
+
+
+/**
+ * Global variables
+ */
+
+module.exports.tags = {};
+var asTag = module.exports.tags.as = {};
+
+
+/**
+ * Basic tag settings
+ */
+
+asTag.isBlock = true;
+
+
+/**
+ * Compile `token` with `compiledContents` to JavaScript, and invoke
+ * `callback(err, compiled)`.
+ *
+ * @param {BlockToken} token
+ * @param {String} compiledContents
+ * @param {Function} callback
+ * @api private
+ */
+
+asTag.compile = function(token, compiledContents,
+                         compiledIntermediate, compiler, callback) {
+
+  var parsed = token.tag.match(AS_PARSE_RE);
+
+  if(!parsed) {
+    return callback(new Error(  'Compilation error: Unable to parse tag `'
+                              + token.tag
+                              + '`.')
+                              );
+  }
+
+  var name = parsed[1];
+
+  var compiled =   '(function(parentAcc) {'
+                 +   'var __acc = [];'
+                 +   compiledContents
+                 +   'var __joined = __acc.join("");'
+                 +   '__data["' + name + '"] = __tools.tools.safe(__joined);'
+                 + '})(__acc);'
+
+  callback(null, compiled);
+}
+
+}); // module: tags/as.js
 
 require.register("tags/block.js", function(module, exports, require){
 /*!
@@ -1553,6 +1620,69 @@ ifTag.compile = function(token, compiledContents,
 
 }); // module: tags/if.js
 
+require.register("tags/ifblock.js", function(module, exports, require){
+/*!
+ * Coolony's Kiwi
+ * Copyright �2012 Pierre Matri <pierre.matri@coolony.com>
+ * MIT Licensed
+ */
+
+
+/**
+ * Constants
+ */
+
+var IFBLOCK_PARSE_RE = /^ifblock\s+([^\s]+)$/;
+
+
+/**
+ * Global variables
+ */
+
+module.exports.tags = {};
+var ifBlockTag = module.exports.tags.ifblock = {};
+
+
+/**
+ * Basic tag settings
+ */
+
+ifBlockTag.isBlock = true;
+
+
+/**
+ * Compile `token` with `compiledContents` to JavaScript, and invoke
+ * `callback(err, compiled)`.
+ *
+ * @param {BlockToken} token
+ * @param {String} compiledContents
+ * @param {Function} callback
+ * @api private
+ */
+
+ifBlockTag.compile = function(token, compiledContents,
+                            compiledIntermediate, compiler, callback) {
+
+  var parsed = token.tag.match(IFBLOCK_PARSE_RE);
+
+  if(!parsed) {
+    return callback(new Error(  'Compilation error: Unable to parse tag `'
+                              + token.tag
+                              + '`.')
+                              );
+  }
+
+  var name = parsed[1];
+
+  var compiled =   'if(!_.isUndefined(__blocks["' + name + '"])) {'
+                 +   compiledContents
+                 + '}'
+
+  callback(null, compiled);
+}
+
+}); // module: tags/ifblock.js
+
 require.register("tags/include.js", function(module, exports, require){
 /*!
  * Coolony's Kiwi
@@ -1981,6 +2111,7 @@ var DEFAULTS = {
   cache: null,
   cacheHandler: Cache,
   cacheOptions: [],
+  lookupPaths: [],
   cacheTmplHandler: CappedCache,
   cacheTmplOptions: [1000],
   useIsolatedTmplCache: true,
@@ -2012,7 +2143,7 @@ function Template(str, options) {
   }
 
   // Create options if not provided
-  if(!options) options = {};
+  options = options ? _.clone(options) : {};
 
   // Set default cache behavior
   if(!_.isBoolean(options.cache)) {
@@ -2805,7 +2936,7 @@ function tmpAsyncForEach(array, fn, args, callback) {
 
   if(!args) args = [];
   array = array.slice(0);
-  
+
   function handleProcessedCallback(err) {
     if(err) return callback(err);
     if(array.length > 0) {
@@ -2814,7 +2945,7 @@ function tmpAsyncForEach(array, fn, args, callback) {
       callback();
     }
   }
-  
+
   function processOne() {
     var item = array.shift();
     fn.apply(this, [item].concat(args).concat([handleProcessedCallback]));
@@ -2966,29 +3097,9 @@ exports.isIterable = function(input) {
 
 
 /**
- * Simple class inheritance.
- * Make `subclass` inherit from `superclass.
- *
- * based on http://peter.michaux.ca/articles/class-based-inheritance-in-javascript
- * @param {Object} subclass
- * @param {Object} superclass
- * @api public
- */
-
-exports.extend = function(subclass, superclass) {
-  function Dummy(){}
-  Dummy.prototype = superclass.prototype;
-  subclass.prototype = new Dummy();
-  subclass.prototype.constructor = subclass;
-  subclass._superclass = superclass;
-  subclass._superproto = superclass.prototype;
-}
-
-
-/**
  * Module exports
  */
- 
+
 module.exports = exports;
 }); // module: utils.js
 
