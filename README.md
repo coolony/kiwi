@@ -278,6 +278,22 @@ new Template(tpl).render({movies: []}, callback);
 </ul>
 ```
 
+### {{as}}
+
+The template markup between the opening and closing tags `{{as}}` and `{{/as}}` is not rendered in the document, but instead saved in a variable for later use.
+
+```
+// Template
+{{as foo}}Kiwi{{/as}}
+<div>${foo}</div>
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+<div>Kiwi</div>
+```
+
 ### {{tmpl}}
 
 Used for composition of templates. Renders a nested template from a string within the rendered output of the parent template.
@@ -328,6 +344,24 @@ new Template(tpl).render({}, function(err, rendered) {
 // Result
 Result: <div>Kiwi</div>
 Foo: Kiwi
+```
+
+### {{ifblock}}
+
+The template markup between the opening and closing tags `{{ifblock}}` and `{{/ifblock}}` is rendered only if the matching block is defined and has content.
+
+```
+// Template
+<div>{{ifblock foo}}Kiwi{{/block}}</div>
+{{block foo}}Hello!{{/block}}
+<div>{{ifblock foo}}Kiwi{{/block}}</div>
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+<div></div>
+<div>Kiwi</div>
 ```
 
 ### {{extend}}
