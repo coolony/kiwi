@@ -1120,7 +1120,7 @@ require.register("tags/block.js", function(module, exports, require){
  * Constants
  */
 
-var BLOCK_PARSE_RE = /^block\s+([^\s]+)$/;
+var BLOCK_PARSE_RE = /^block\s+([^\s]+)(?:\s+(append|prepend))?$/;
 
 
 /**
@@ -1161,15 +1161,23 @@ blockTag.compile = function(token, compiledContents,
   }
 
   var name = parsed[1];
+  var mode = parsed[2];
 
   var compiled =   '(function(parentAcc) {'
                  +   'var __acc = [];'
-                 +   'if(_.isUndefined(__blocks["' + name + '"])) {'
+                 +   'if(_.isUndefined(__blocks["' + name + '"]) || __blocks["' + name + '"].mode) {'
+                 +     'if(__blocks["' + name + '"] && __blocks["' + name + '"].mode == "append") {'
+                 +       '__acc.push(__blocks["' + name + '"]);'
+                 +     '}'
                  +     compiledContents
+                 +     'if(__blocks["' + name + '"] && __blocks["' + name + '"].mode == "prepend") {'
+                 +       '__acc.push(__blocks["' + name + '"]);'
+                 +     '}'
                  +   '} else {'
-                 +     '__acc.push(__blocks["' + name + '"])'
+                 +     '__acc.push(__blocks["' + name + '"]);'
                  +   '}'
-                 +   'var __joined = __acc.join("");'
+                 +   'var __joined = new String(__acc.join(""));'
+                 +   (mode ? ('__joined.mode = "' + mode + '";') : '')
                  +   'parentAcc.push(__joined);'
                  +   '__blocks["' + name + '"] = __joined;'
                  + '})(__acc);'

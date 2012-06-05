@@ -333,6 +333,8 @@ new Template(tpl).render({}, callback);
 
 ### {{block}}
 
+#### Basic usage
+
 Used to set separate blocks in your template. This can be used to extract specific portions of your template after rendering, or in combination with `{{extend}}` tag:
 
 ```
@@ -349,6 +351,27 @@ new Template(tpl).render({}, function(err, rendered) {
 Result: <div>Kiwi</div>
 Foo: Kiwi
 ```
+
+#### Prepend / append
+
+When using block tag with `{{extend}}`, it can be useful to append or prepend block markup to parent template block instead of replacing it. You can use the `append` and `prepend` directives to command this behavior.
+
+```
+// foo.kiwi
+Hello, {{block place}}world{{/block}}, dear {{block name}}user{{/block}}!
+
+// Template
+{{extend "foo"}}
+{{block place prepend}}big {{/block}}
+{{block name append}} 42{{/block}}
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+<div>Hello, big world, dear user 42!</div>
+```
+
 
 ### {{ifblock}}
 
@@ -374,11 +397,11 @@ Makes the current template extend another template loaded from disk.
 
 ```
 // foo.kiwi
-Hello, {{block foo}}world{{/block}}!
+Hello, {{block place}}world{{/block}}!
 
 // Template
 {{extend "foo"}}
-{{block foo}}kiwi{{/block}}
+{{block place}}kiwi{{/block}}
 
 // Code
 new Template(tpl).render({}, callback);

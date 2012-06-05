@@ -71,12 +71,11 @@ cases.forEach(function(path) {
     var template = new kiwi.Template({cache: false});
 
     function onLoaded(err, data) {
-      should.not.exist(err);
       template.render(TEST_DATA, onRendered)
     }
 
     function onRendered(err, rendered) {
-      if(!err) rendered.trim().should.equal(html);
+      rendered.trim().should.equal(html);
       done(err);
     }
 
