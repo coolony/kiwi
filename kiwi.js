@@ -2135,7 +2135,7 @@ var DEFAULTS = {
   lookup: utils.lookupTemplate,
   load: utils.loadTemplate,
   path: null,
-  cache: null,
+  cache: true,
   cacheHandler: Cache,
   cacheOptions: [],
   lookupPaths: [],
@@ -2173,13 +2173,6 @@ function Template(str, options) {
   options = options ? _.clone(options) : {};
 
   // Set default cache behavior
-  if(!_.isBoolean(options.cache)) {
-    if(options && options.settings) {
-      options.cache = options.settings.env !== 'development';
-    } else {
-      options.cache = true;
-    }
-  }
 
   // Merges given `options` with `DEFAULTS`
   options = _.defaults(options, DEFAULTS);
@@ -2247,7 +2240,7 @@ Template.prototype.render = function(data, callback) {
   // Check whether we have the compiled template ready in the object or in cache
   var cacheKey = 'template::' + this._cacheKey();
   if(!this.compiled && this.options.cache) {
-    this.compiled = this._getCache().get(cacheKey);
+    this._compiled = this._getCache().get(cacheKey);
   }
 
   // Render it if we got it…
@@ -2419,7 +2412,7 @@ require.register("token.js", function(module, exports, require){
 var frame;
 
 var utils = require('./utils');
-var extend = frame ? frame.classes.extend : utils.extend;
+var inherits = frame ? frame.classes.extend : utils.inherits;
 
 
 /*
@@ -2507,7 +2500,7 @@ function LiteralToken(literal, root, parent, options) {
   LiteralToken._superclass.call(this, root, parent, options);
   this.literal = literal;
 }
-extend(LiteralToken, BaseToken);
+inherits(LiteralToken, BaseToken);
 
 
 /*
@@ -2546,7 +2539,7 @@ function RootToken(children, options) {
   this.head = [];
   this.children = children;
 }
-extend(RootToken, BaseToken);
+inherits(RootToken, BaseToken);
 
 
 /*
@@ -2611,7 +2604,7 @@ function BlockToken(tag, tagType, root, parent, children, options) {
   this.children = children;
   this.intermediate = [];
 }
-extend(BlockToken, BaseToken);
+inherits(BlockToken, BaseToken);
 
 
 /*
@@ -2675,7 +2668,7 @@ function LeafToken(tag, tagType, root, parent, options) {
   this.tag = tag;
   this.tagType = tagType;
 }
-extend(LeafToken, BaseToken);
+inherits(LeafToken, BaseToken);
 
 
 /*
@@ -2730,7 +2723,7 @@ function IntermediateToken(tag, tagType, root, parent, children, options) {
   IntermediateToken._superclass.call(this, tag, tagType, root,
                               parent, children, options);
 }
-extend(IntermediateToken, BlockToken);
+inherits(IntermediateToken, BlockToken);
 
 
 /*
@@ -3205,6 +3198,26 @@ exports.escapeCompiledString = function(str) {
 
 exports.isIterable = function(input) {
   return typeof input === 'object' && !(input instanceof String)
+}
+
+
+/**
+ * Simple class inheritance.
+ * Make `subclass` inherit from `superclass`.
+ *
+ * based on http://peter.michaux.ca/articles/class-based-inheritance-in-javascript
+ * @param {Object} subclass
+ * @param {Object} superclass
+ * @api public
+ */
+
+exports.inherits = function(subclass, superclass) {
+  function Dummy(){}
+  Dummy.prototype = superclass.prototype;
+  subclass.prototype = new Dummy();
+  subclass.prototype.constructor = subclass;
+  subclass._superclass = superclass;
+  subclass._superproto = superclass.prototype;
 }
 
 
