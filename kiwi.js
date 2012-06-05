@@ -62,7 +62,7 @@ require.register("cache.js", function(module, exports, require){
  *
  * @api public
  */
- 
+
 function Cache() {
   this._cache = {};
 }
@@ -75,7 +75,7 @@ function Cache() {
  * @param {Mixed} value
  * @api public
  */
- 
+
 Cache.prototype.cache = function(key, value) {
   if(_.isUndefined(value)) return;
   this._cache[key] = value;
@@ -89,7 +89,7 @@ Cache.prototype.cache = function(key, value) {
  * @return {Mixed}
  * @api public
  */
- 
+
 Cache.prototype.get = function(key) {
   return this._cache[key];
 }
@@ -98,7 +98,7 @@ Cache.prototype.get = function(key) {
 /**
  * Module exports.
  */
- 
+
 module.exports = exports = Cache;
 }); // module: cache.js
 
@@ -436,14 +436,12 @@ function loadFilters(loadedFiles) {
     }
   }
 }
-if(typeof window !== 'undefined') {
-  var files = ['base', 'datetime'];
-  var acc = {};
-  _.each(files, function(file) {
-    acc[file] = require('./filters/' + file);
-  });
-  loadFilters(acc);
-}
+ var files = ['base', 'datetime'];
+ var acc = {};
+ _.each(files, function(file) {
+   acc[file] = require('./filters/' + file);
+ });
+ loadFilters(acc);
 
 }); // module: filter.js
 
@@ -2215,9 +2213,7 @@ Template.prototype._getCache = function() {
  */
 
 Template.prototype.loadFile = function(filePath, callback) {
-if(typeof window !== 'undefined') {
-  callback(new Error('Client mode does not support reading from file.'));
-}
+ callback(new Error('Client mode does not support reading from file.'));
 }
 
 
@@ -2851,14 +2847,12 @@ function loadTags(loadedFiles) {
   }
 }
 
-if(typeof window !== 'undefined') {
-  var files = ['block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl'];
-  var acc = {};
-  _.each(files, function(file) {
-    acc[file] = require('./tags/' + file);
-  });
-  loadTags(acc);
-}
+ var files = ['block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl', 'ifblock', 'as'];
+ var acc = {};
+ _.each(files, function(file) {
+   acc[file] = require('./tags/' + file);
+ });
+ loadTags(acc);
 
 
 
