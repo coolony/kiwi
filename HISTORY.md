@@ -5,10 +5,11 @@
 ### New fratures
 
 * Added client-side support.
-* Added `ifblock`tag.
-* Added `as`tag.
+* Added `ifblock` tag.
+* Added `as` tag.
 * Added new `lookupPaths` configuration option to add flexibility in nesting templates.
 * Added support for block append and prepend.
+* Added experimental `parent` tag.
 
 ### Improvements
 

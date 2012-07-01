@@ -372,6 +372,25 @@ new Template(tpl).render({}, callback);
 <div>Hello, big world, dear user 42!</div>
 ```
 
+#### Parent
+
+When using block tag with `{{extend}}`, you may want to inclue parent block markup inside child block. You can use the `{{parent}}` tag to do this. **This feature must be considered as experimental.**
+
+```
+// foo.kiwi
+{{block greeting}}Welcome!{{/block}}
+
+// Template
+{{extend "foo"}}
+{{block greeting}}I just wanted to say « {{parent}} »{{/block}}
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+<div>I just wanted to say « Welcome! »</div>
+```
+
 
 ### {{ifblock}}
 
