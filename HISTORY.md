@@ -20,6 +20,7 @@
 * Corrected a bug that prevented Express' `view options` to be correctly passed to Kiwi.
 * Fixed rendering exception handling, which could cause Express to crash in certain conditions.
 * Fixed a bug that could prevent cache to work properly in certain conditions.
+* Corrected documentation.
 
 
 ## 0.1.2

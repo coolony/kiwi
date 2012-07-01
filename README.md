@@ -117,7 +117,7 @@ The `${}` tag optionally supports filters.
 new Template(tpl).render({a: 'kiwi'}, callback);
 
 // Result
-<div>wiwi</div>
+<div>Wiwi</div>
 ```
 
 #### Escaping by default
