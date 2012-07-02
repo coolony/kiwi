@@ -2257,7 +2257,7 @@ Template.prototype._getCache = function() {
 
 
 /**
- * Load the template from disk at `filePath`, and invoke `callback(err, data)`.
+ * Load the template from disk at `filePath`, and invoke `callback(err)`.
  *
  * @param {String} filePath
  * @param {Function} callback
@@ -2279,11 +2279,14 @@ Template.prototype.loadFile = function(filePath, callback) {
 
 Template.prototype.render = function(data, callback) {
 
-  // Handle the case where the only argument passed is the `options` object
+  // Support callback as 1st arg
   if(_.isFunction(data) && !callback){
     callback = data;
     data = {};
   }
+  
+  // Data defaults
+  if(!data) data = {};
 
   // Check whether we have the compiled template ready in the object or in cache
   var cacheKey = 'template::' + this._cacheKey();
@@ -2300,6 +2303,21 @@ Template.prototype.render = function(data, callback) {
     if(err) return callback(err);
     _this._renderCompiled(data, callback);
   })
+}
+
+
+/**
+ * Load the template from disk at `filePath`, render it with given `data`,
+ * and invoke `callback(err, compiled)`.
+ *
+ * @param {String} filePath
+ * @param {Object} [data]
+ * @param {Function} callback
+ * @api public
+ */
+ 
+Template.prototype.loadAndRender = function(filePath, data, callback) {
+ callback(new Error('Client mode does not support reading from file.'));
 }
 
 

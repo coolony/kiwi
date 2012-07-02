@@ -10,13 +10,17 @@
 * Added new `lookupPaths` configuration option to add flexibility in nesting templates.
 * Added support for block append and prepend.
 * Added experimental `parent` tag.
-* Added compatibility with node 0.8.x
-* Dropped support for node < 0.6.x
-
+* Added `Template#loadAndRender` shortcut
 
 ### Improvements
 
 * Various performance improvements.
+
+### Compatibility
+
+* Added compatibility with node 0.8.x.
+* Dropped support for node < 0.6.x.
+* `Template#load` doesn't invoke callback with raw loaded file data anymore.
 
 
 ### Bug fixes

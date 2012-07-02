@@ -61,14 +61,14 @@ describe('Template', function() {
     });
 
     it('should load template', function(done) {
-      template.loadFile(__dirname + '/../fixtures/hello.kiwi', function(err, data) {
-        data.should.equal('<p class="hello">Hello ${name}!</p>');
+      template.loadFile(__dirname + '/../fixtures/hello.kiwi', function(err) {
+        template.template.should.equal('<p class="hello">Hello ${name}!</p>');
         done();
       });
     });
 
     it('should return an error when the file doesn\'t exist', function(done) {
-      template.loadFile(__dirname + '/../fixtures/goodbye.kiwi', function(err, data) {
+      template.loadFile(__dirname + '/../fixtures/goodbye.kiwi', function(err) {
         should.exist(err);
         done();
       });
@@ -78,8 +78,8 @@ describe('Template', function() {
       template = new Template({load: function(path, callback){
         callback(null, 'foo');
       }})
-      template.loadFile('kiwiiiiii', function(err, data) {
-        data.should.equal('foo');
+      template.loadFile('kiwiiiiii', function(err) {
+        template.template.should.equal('foo');
         done();
       });
     });
@@ -88,7 +88,7 @@ describe('Template', function() {
       template = new Template({load: function(path, callback){
         callback('bar');
       }})
-      template.loadFile('kiwiiiiii', function(err, data) {
+      template.loadFile('kiwiiiiii', function(err) {
         err.should.equal('bar');
         done();
       });
@@ -112,6 +112,17 @@ describe('Template', function() {
       template.render({name: 'Kiwi'}, function(err, compiled) {
         if(err) throw err;
         compiled.should.equal('foo Kiwi bar');
+        done();
+      });
+    });
+  });
+  
+  describe('#loadAndRender', function() {
+    it('should load and render template', function(done) {
+      var template = new Template();
+      template.loadAndRender(__dirname + '/../fixtures/hello.kiwi', {name: 'Kiwi'}, function(err, compiled) {
+        if(err) throw err;
+        compiled.should.equal('<p class="hello">Hello Kiwi!</p>');
         done();
       });
     });

@@ -79,6 +79,16 @@ var template = new kiwi.Template().loadFile('template.kiwi', function onLoaded(e
 });
 ```
 
+In order to make the process of loading and rendering a template easier, Kiwi does expose a handy `loadAndRender`shortcut:
+
+```javascript
+var kiwi = require('kiwi');
+
+var template = new kiwi.Template().loadAndRender('template.kiwi', {name: "Kiwi"}, function onRendered(err, rendered) {
+  console.log('Rendered template is: ' + rendered);
+});
+```
+
 ### Client-side dependencies
 
 Please note that client-side usage requires [Underscore.js](http://underscorejs.org/) to be included in the page. This requirement will be removed in a future release.
