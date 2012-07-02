@@ -22,5 +22,5 @@
   "scripts": {
     "test": "make test"
     },
-  "engines": { "node":">= 0.4.0 < 0.7.0" }
+  "engines": { "node":">= 0.6.0" }
 }

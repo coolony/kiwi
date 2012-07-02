@@ -10,6 +10,9 @@
 * Added new `lookupPaths` configuration option to add flexibility in nesting templates.
 * Added support for block append and prepend.
 * Added experimental `parent` tag.
+* Added compatibility with node 0.8.x
+* Dropped support for node < 0.6.x
+
 
 ### Improvements
 
