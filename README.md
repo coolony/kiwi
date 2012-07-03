@@ -386,7 +386,7 @@ new Template(tpl).render({}, callback);
 
 #### Parent
 
-When using block tag with `{{extend}}`, you may want to inclue parent block markup inside child block. You can use the `{{parent}}` tag to do this. **This feature must be considered as experimental.**
+When using block tag with `{{extend}}`, you may want to inclue parent block markup inside child block. You can use the `{{parent}}` tag to do this.
 
 ```
 // foo.kiwi

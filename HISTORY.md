@@ -9,7 +9,7 @@
 * Added `as` tag.
 * Added new `lookupPaths` configuration option to add flexibility in nesting templates.
 * Added support for block append and prepend.
-* Added experimental `parent` tag.
+* Added `parent` tag.
 * Added `Template#loadAndRender` shortcut
 
 ### Improvements

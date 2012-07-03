@@ -1,0 +1,2 @@
+{{extend "root_var.kiwi"}}
+{{block ext}}afterbefore ${somevar2} {{parent}} beforeafter {{parent}}{{/block}}
