@@ -62,7 +62,7 @@ describe('Parent tag', function() {
     
     template.template = '{{parent}}';
     template.render({}, function(err, rendered) {
-      err.message.should.equal('Compilation error: `parent` tag must be immediate child of a `block` tag.');
+      err.message.should.equal('Compilation error: `parent` must be immediate child of a `block` tag.');
       done();
     })
     
