@@ -1,5 +1,11 @@
 # Kiwi's History
 
+## Head
+
+### New features
+
+* Default view lookup function now looks for template paths relative to `process.cwd()`.
+
 ## 0.1.3
 
 ### New fratures
