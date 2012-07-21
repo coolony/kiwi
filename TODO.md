@@ -7,4 +7,4 @@
 * Add {{body}} tag, so extends doesn't require the use of blocks
 * Performance improvements for blocks
 * New tests for Kiwi core
-* jsLint testing
+* Remove dependency for Underscore.js in the browser version
