@@ -56,6 +56,12 @@ require.register("cache.js", function(module, exports, require){
 
 
 /**
+ * Module dependencies.
+ */
+
+
+
+/**
  * Basic cache for client mode.
  *
  * Constructor.
@@ -79,7 +85,7 @@ function Cache() {
 Cache.prototype.cache = function(key, value) {
   if(_.isUndefined(value)) return;
   this._cache[key] = value;
-}
+};
 
 
 /**
@@ -92,14 +98,14 @@ Cache.prototype.cache = function(key, value) {
 
 Cache.prototype.get = function(key) {
   return this._cache[key];
-}
+};
 
 
 /**
  * Module exports.
  */
 
-module.exports = exports = Cache;
+module.exports = Cache;
 }); // module: cache.js
 
 require.register("compiler.js", function(module, exports, require){
@@ -142,7 +148,7 @@ var Compiler = module.exports = function(template) {
   this.options = template.options;
   this.helpers = {};
   this.__compilationEnd = [];
-}
+};
 
 
 /**
@@ -188,7 +194,7 @@ Compiler.prototype.compile = function(callback) {
 
   // Apply tag before processors
   utils.applyAll(this.source, token.tagBeforeProcessors, [this], onProcessed);
-}
+};
 
 
 /**
@@ -212,7 +218,7 @@ Compiler.prototype._tokenize = function(source, callback) {
                                                TAG_OPENING_DELIMITER
                                              );
 
-    if(nextInflexion == -1) {
+    if(nextInflexion === -1) {
       this._pushLiteralToken(rootToken, currentToken, workingSource);
       break;
     } else {
@@ -238,15 +244,15 @@ Compiler.prototype._tokenize = function(source, callback) {
 
   // Ensure we are at root level
   if(rootToken !== currentToken) {
-    return callback(new Error(  'Tokenization error: unexpected end of file, '
-                              + 'expected `'
-                              + currentToken.tag.tagName
-                              + '`.')
-                              );
+    return callback(new Error('Tokenization error: unexpected end of file, ' +
+                              'expected `' +
+                              currentToken.tag.tagName +
+                              '`.'
+                              ));
   }
 
   callback(null, rootToken);
-}
+};
 
 
 /**
@@ -260,7 +266,7 @@ Compiler.prototype._tokenize = function(source, callback) {
 Compiler.prototype._pushLiteralToken = function(root, parent, literal) {
   if(!literal.length) return;
   parent.children.push(new token.LiteralToken(literal, root));
-}
+};
 
 
 /**
@@ -278,6 +284,7 @@ Compiler.prototype._pushToken = function(root, current, tag) {
   var tagName = match[2];
   var openingTag = match[1] !== '/';
   var tagType = current.lookupTag(tagName);
+  var newToken;
 
   // Check whether we know this tag
   if(!tagType) {
@@ -291,7 +298,7 @@ Compiler.prototype._pushToken = function(root, current, tag) {
     if(current.tagType.isIntermediate) current = current.parent;
 
     // Push the tag to the stack
-    var newToken = new token.IntermediateToken(tag,
+    newToken = new token.IntermediateToken(tag,
                                                tagType,
                                                root,
                                                current,
@@ -307,12 +314,12 @@ Compiler.prototype._pushToken = function(root, current, tag) {
 
     // Handle opening tags
     if(openingTag) {
-      var newToken = new token.BlockToken(tag,
-                                          tagType,
-                                          root,
-                                          current,
-                                          [],
-                                          this.options);
+      newToken = new token.BlockToken(tag,
+                                      tagType,
+                                      root,
+                                      current,
+                                      [],
+                                      this.options);
 
       current.children.push(newToken);
       return newToken;
@@ -320,9 +327,9 @@ Compiler.prototype._pushToken = function(root, current, tag) {
     // Handle closing tags
     } else {
       if(!current.parent) {
-        throw new Error(  'Tokenization error: unexpected `'
-                        + tagName
-                        + '` tag at root level.'
+        throw new Error('Tokenization error: unexpected `' +
+                        tagName +
+                        '` tag at root level.'
                         );
       }
 
@@ -331,11 +338,11 @@ Compiler.prototype._pushToken = function(root, current, tag) {
       }
 
       if(current.tagType.tagName !== tagName) {
-        throw new Error(  'Tokenization error: unexpected `'
-                        + tagName
-                        + '` tag, expected `'
-                        + current.tag.tagName
-                        + '`.'
+        throw new Error('Tokenization error: unexpected `' +
+                        tagName +
+                        '` tag, expected `' +
+                        current.tag.tagName +
+                        '`.'
                         );
       }
       return current.parent;
@@ -347,25 +354,27 @@ Compiler.prototype._pushToken = function(root, current, tag) {
 
     // Ensure we don't have a closing tag
     if(!openingTag) {
-      throw new Error(  'Tokenization error: `'
-                      + tagName
-                      + '` is not a block tag.'
+      throw new Error('Tokenization error: `' +
+                      tagName +
+                      '` is not a block tag.'
                       );
     }
-    var newToken = new token.LeafToken(tag,
-                                       tagType,
-                                       root,
-                                       current,
-                                       this.options);
+
+    newToken = new token.LeafToken(tag,
+                                   tagType,
+                                   root,
+                                   current,
+                                   this.options);
+
     current.children.push(newToken);
     return current;
   }
-}
+};
 
 
 Compiler.prototype.registerTemplateHelper = function(name, helper) {
   this.helpers[name] = helper;
-}
+};
 }); // module: compiler.js
 
 require.register("filter.js", function(module, exports, require){
@@ -407,9 +416,10 @@ function filter(input, filters) {
     input = filterFunction.apply(this, [input].concat(filterArgs));
   });
   if(unknownFilter) {
-    throw new Error(  'Rendering error: Unknown filter `'
-                    + unknownFilter
-                    + '`.');
+    throw new Error('Rendering error: Unknown filter `' +
+                    unknownFilter +
+                    '`.'
+                    );
   }
   return input;
 }
@@ -429,9 +439,9 @@ var filters = module.exports.filters = {};
 
 function loadFilters(loadedFiles) {
   loadedFiles = loadedFiles || frame.files.requireDir(__dirname + '/filters/');
-  for(file in loadedFiles) {
+  for(var file in loadedFiles) {
     var fileFilters = loadedFiles[file];
-    for(filter in fileFilters) {
+    for(var filter in fileFilters) {
       filters[filter] = fileFilters[filter];
     }
   }
@@ -482,7 +492,7 @@ exports.escape = function(input) {
     return acc;
   }
   return tools.escape(input);
-}
+};
 
 
 /**
@@ -503,7 +513,7 @@ exports.escapeIfUnsafe = function(input) {
     return acc;
   }
   return tools.escapeIfUnsafe(input);
-}
+};
 
 
 /**
@@ -524,7 +534,7 @@ exports.capitalize = function(input) {
   }
   input = input.toString();
   return input.charAt(0).toUpperCase() + input.slice(1);
-}
+};
 
 
 /**
@@ -544,7 +554,7 @@ exports.upper = function(input) {
     return acc;
   }
   return input.toString().toUpperCase();
-}
+};
 
 
 /**
@@ -564,7 +574,7 @@ exports.lower = function(input) {
     return acc;
   }
   return input.toString().toLowerCase();
-}
+};
 
 
 /**
@@ -577,7 +587,7 @@ exports.lower = function(input) {
 
 exports.json = function(input) {
   return JSON.stringify(input);
-}
+};
 
 
 /**
@@ -598,7 +608,7 @@ exports.add = function(input, operand) {
     return acc;
   }
   return parseFloat(input) + parseFloat(operand);
-}
+};
 
 
 /**
@@ -611,8 +621,8 @@ exports.add = function(input, operand) {
  */
 
 exports.subtract = function(input, operand) {
-  return exports.add(input, -parseInt(operand));
-}
+  return exports.add(input, -parseInt(operand, 10));
+};
 
 
 /**
@@ -633,7 +643,7 @@ exports.mul = function(input, operand) {
     return acc;
   }
   return parseFloat(input) * parseFloat(operand);
-}
+};
 
 
 /**
@@ -654,7 +664,7 @@ exports.div = function(input, operand) {
     return acc;
   }
   return parseFloat(input) / parseFloat(operand);
-}
+};
 
 
 /**
@@ -667,7 +677,7 @@ exports.div = function(input, operand) {
 
 exports.incr = function(input, operand) {
   return exports.add(input, 1);
-}
+};
 
 
 /**
@@ -680,7 +690,7 @@ exports.incr = function(input, operand) {
 
 exports.decr = function(input, operand) {
   return exports.add(input, -1);
-}
+};
 
 
 /**
@@ -695,12 +705,12 @@ exports.round = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = exports.round(value, operand);
+      acc[key] = exports.round(value);
     });
     return acc;
   }
   return Math.round(input);
-}
+};
 
 
 /**
@@ -715,12 +725,12 @@ exports.floor = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = exports.floor(value, operand);
+      acc[key] = exports.floor(value);
     });
     return acc;
   }
   return Math.floor(input);
-}
+};
 
 
 /**
@@ -735,12 +745,12 @@ exports.ceil = function(input) {
   if(typeof input === 'object') {
     var acc = {};
     _.each(input, function (value, key) {
-      acc[key] = exports.ceil(value, operand);
+      acc[key] = exports.ceil(value);
     });
     return acc;
   }
   return Math.ceil(input);
-}
+};
 
 
 /**
@@ -760,8 +770,8 @@ exports.cut = function(input, needle) {
     });
     return acc;
   }
-  return input.toString().replace(needle, '')
-}
+  return input.toString().replace(needle, '');
+};
 
 
 /**
@@ -785,7 +795,7 @@ exports.addslashes = function(input) {
               .replace(/\'/g, "\\'")
               .replace(/\"/g, '\\"')
               .replace(/\0/g,'\\0');
-}
+};
 
 
 /**
@@ -809,7 +819,7 @@ exports.stripslashes = function(input) {
               .replace(/\\"/g,'"')
               .replace(/\\0/g,'\0')
               .replace(/\\\\/g,'\\');
-}
+};
 
 
 /**
@@ -937,7 +947,7 @@ exports.replace = function(input, search, replacement, flags) {
 /**
  * Module exports
  */
- 
+
 module.exports = exports;
 
 }); // module: filters/base.js
@@ -966,7 +976,7 @@ require.register("filters/datetime.js", function(module, exports, require){
 
 exports.timeago = function(input) {
   return moment(input).fromNow();
-}
+};
 
 
 /**
@@ -979,7 +989,7 @@ exports.timeago = function(input) {
 
 exports.relativedate = function(input) {
   return moment(input).calendar();
-}
+};
 
 
 /**
@@ -993,13 +1003,13 @@ exports.relativedate = function(input) {
 
 exports.date = function(input, pattern) {
   return moment(input).format(pattern);
-}
+};
 
 
 /**
  * Module exports
  */
- 
+
 module.exports = exports;
 }); // module: filters/datetime.js
 
@@ -1088,23 +1098,23 @@ asTag.compile = function(token, compiledContents,
   var parsed = token.tag.match(AS_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var name = parsed[1];
 
-  var compiled =   '(function(parentAcc) {'
-                 +   'var __acc = [];'
-                 +   compiledContents
-                 +   'var __joined = __acc.join("");'
-                 +   '__data["' + name + '"] = __tools.tools.safe(__joined);'
-                 + '})(__acc);'
+  var compiled = '(function(parentAcc) {' +
+                   'var __acc = [];' +
+                   compiledContents +
+                   'var __joined = __acc.join("");' +
+                   '__data["' + name + '"] = __tools.tools.safe(__joined);' +
+                 '})(__acc);';
 
   callback(null, compiled);
-}
+};
 
 }); // module: tags/as.js
 
@@ -1159,56 +1169,59 @@ blockTag.compile = function(token, compiledContents,
   var parsed = token.tag.match(BLOCK_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var name = parsed[1];
   var mode = parsed[2];
-  
+
   //console.log(compiledContents);
 
-  var compiled =   '(function(parentAcc) {'
-                 +   'var __acc = [];'
-                 +   compiledContents
-                 +   'var __currentBlock = __acc.join("");'
-                 +   'if(!_.isUndefined(__blocks["' + name + '"])) {'
-                 +     '__tmp = new String(__blocks["' + name + '"].replace('
-                 +       '/\\{\\{parent\\}\\}/g, __currentBlock'
-                 +     '));'
-                 +     'if(__blocks["' + name + '"].mode) {'
-                 +       '__tmp.mode = __blocks["' + name + '"].mode;'
-                 +     '}'
-                 +     '__blocks["' + name + '"] = __tmp;'
-                 +   '}'
-                 +   'var __acc = [];'
-                 +   'if(_.isUndefined(__blocks["' + name + '"]) || __blocks["' + name + '"].mode) {'
-                 +     'if(__blocks["' + name + '"] && __blocks["' + name + '"].mode == "append") {'
-                 +       '__acc.push(__blocks["' + name + '"]);'
-                 +     '}'
-                 +     '__acc.push(__currentBlock);'
-                 +     'if(__blocks["' + name + '"] && __blocks["' + name + '"].mode == "prepend") {'
-                 +       '__acc.push(__blocks["' + name + '"]);'
-                 +     '}'
-                 +   '} else {'
-                 +     '__acc.push(__blocks["' + name + '"]);'
-                 +   '}'
-                 +   'var __joined = new String(__acc.join(""));'
-                 +   (mode ? ('__joined.mode = "' + mode + '";') : '')
-                 +   'parentAcc.push(__joined);'
-                 +   '__blocks["' + name + '"] = __joined;'
-                 + '})(__acc);'
+  var compiled = '(function(parentAcc) {' +
+                   'var __acc = [];' +
+                   compiledContents +
+                   'var __currentBlock = __acc.join("");' +
+                   'if(!_.isUndefined(__blocks["' + name + '"])) {' +
+                     '__tmp = new String(__blocks["' + name + '"].replace(' +
+                       '/\\{\\{parent\\}\\}/g, __currentBlock' +
+                     '));' +
+                     'if(__blocks["' + name + '"].mode) {' +
+                       '__tmp.mode = __blocks["' + name + '"].mode;' +
+                     '}' +
+                     '__blocks["' + name + '"] = __tmp;' +
+                   '}' +
+                   'var __acc = [];' +
+                   'if(_.isUndefined(__blocks["' + name + '"]) ||' +
+                      '__blocks["' + name + '"].mode) {' +
+                     'if(__blocks["' + name + '"] &&' +
+                        '__blocks["' + name + '"].mode == "append") {' +
+                       '__acc.push(__blocks["' + name + '"]);' +
+                     '}' +
+                     '__acc.push(__currentBlock);' +
+                     'if(__blocks["' + name + '"] &&' +
+                        '__blocks["' + name + '"].mode == "prepend") {' +
+                       '__acc.push(__blocks["' + name + '"]);' +
+                     '}' +
+                   '} else {' +
+                     '__acc.push(__blocks["' + name + '"]);' +
+                   '}' +
+                   'var __joined = new String(__acc.join(""));' +
+                   (mode ? ('__joined.mode = "' + mode + '";') : '') +
+                   'parentAcc.push(__joined);' +
+                   '__blocks["' + name + '"] = __joined;' +
+                 '})(__acc);';
 
   callback(null, compiled);
-}
+};
 
 
 /**
  * Parent tag
  */
- 
+
 /**
  * Compile `token` with `compiledContents` to JavaScript, and invoke
  * `callback(err, compiled)`.
@@ -1221,13 +1234,15 @@ blockTag.compile = function(token, compiledContents,
 
 parentTag.compile = function(token, compiledContents, compiler, callback) {
   if(!token.parent.tagType || token.parent.tagType.tagName !== 'block') {
-    return callback(new Error('Compilation error: `parent` tag must be immediate child of a `block` tag.'));
+    return callback(new Error(
+      'Compilation error: `parent` must be immediate child of a `block` tag.'
+    ));
   }
-  
+
   token.parent.hasParentTag = true;
 
   callback(null, '__acc.push("{{parent}}");');
-}
+};
 
 }); // module: tags/block.js
 
@@ -1273,7 +1288,7 @@ commentTag.isBlock = false;
 
 commentTag.compile = function(token, compiledContents, compiler, callback) {
   callback(null, '');
-}
+};
 
 
 /**
@@ -1289,7 +1304,7 @@ commentTag.compile = function(token, compiledContents, compiler, callback) {
 commentTag.beforeProcessor = function(source, compiler, callback) {
   source = source.replace(COMMENT_RE, '');
   callback(null, source);
-}
+};
 }); // module: tags/comment.js
 
 require.register("tags/each.js", function(module, exports, require){
@@ -1322,7 +1337,7 @@ var emptyTag = intermediateTags.empty = {};
  */
 
 eachTag.isBlock = true;
-eachTag.headDeclarations = 'var _eachLoop;'
+eachTag.headDeclarations = 'var _eachLoop;';
 
 
 /**
@@ -1340,10 +1355,10 @@ eachTag.compile = function(token, compiledContents,
   var parsed = token.tag.match(EACH_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var elementVariable = parsed[1] || '$value';
@@ -1356,15 +1371,17 @@ eachTag.compile = function(token, compiledContents,
 
     // Ensure there is only one tag
     if(compiledIntermediate.length > 1) {
-      return callback(new Error(  'Compilation Error: Too many intermediate '
-                                + 'tags for `each`.'));
+      return callback(new Error('Compilation Error: Too many intermediate ' +
+                                'tags for `each`.'
+                                ));
     }
 
     // Check tag
     if(token.intermediate[0].tag !== 'empty') {
-      return callback(new Error(  'Compilation Error: Unexpected tag `'
-                                + token.intermediate[0].tag
-                                + '`.'));
+      return callback(new Error('Compilation Error: Unexpected tag `' +
+                                token.intermediate[0].tag +
+                                '`.'
+                                ));
     }
 
     ifEmpty = compiledIntermediate[0];
@@ -1375,15 +1392,15 @@ eachTag.compile = function(token, compiledContents,
 
   // Add loop collection part
   if(!token.options.strict) {
-    compiled +=   'try {'
-                +   '__tmp = ' + collection
-                + '} catch(__err) {'
-                +   'if(__err instanceof ReferenceError) {'
-                +     '__tmp = [];'
-                +   '} else {'
-                +     'throw __err;'
-                +   '}'
-                + '}';
+    compiled += 'try {' +
+                  '__tmp = ' + collection +
+                '} catch(__err) {' +
+                  'if(__err instanceof ReferenceError) {' +
+                    '__tmp = [];' +
+                  '} else {' +
+                    'throw __err;' +
+                  '}' +
+                '}';
   }
   else {
     compiled += '__tmp = ' + collection + ';';
@@ -1397,41 +1414,41 @@ eachTag.compile = function(token, compiledContents,
 
   // Call each
   if(token.options.eachCounters) {
-    compiled +=    'var __eachLoopCounter = 0;'
-                +  '_.each(__tmp, '
-                + 'function(' + elementVariable + ',' + indexVariable + '){'
-                +   '_eachLoop = {'
-                +     'size: __eachLoopLength,'
-                +     'counter0: __eachLoopCounter,'
-                +     'counter: __eachLoopCounter + 1,'
-                +     'revcounter0: __eachLoopLength - __eachLoopCounter - 1,'
-                +     'revcounter: __eachLoopLength - __eachLoopCounter,'
-                +     'first: __eachLoopCounter === 0,'
-                +     'last: __eachLoopCounter + 1 === __eachLoopLength,'
-                +     'parentLoop: __parentEachLoop'
-                +   '};'
-                +   compiledContents
-                +   '__eachLoopCounter++;'
-                + '});';
+    compiled += 'var __eachLoopCounter = 0;' +
+                '_.each(__tmp, ' +
+                'function(' + elementVariable + ',' + indexVariable + '){' +
+                  '_eachLoop = {' +
+                    'size: __eachLoopLength,' +
+                    'counter0: __eachLoopCounter,' +
+                    'counter: __eachLoopCounter + 1,' +
+                    'revcounter0: __eachLoopLength - __eachLoopCounter - 1,' +
+                    'revcounter: __eachLoopLength - __eachLoopCounter,' +
+                    'first: __eachLoopCounter === 0,' +
+                    'last: __eachLoopCounter + 1 === __eachLoopLength,' +
+                    'parentLoop: __parentEachLoop' +
+                  '};' +
+                  compiledContents +
+                  '__eachLoopCounter++;' +
+                '});';
   }
   else {
-    compiled +=    '_.each(__tmp, '
-                + 'function(' + elementVariable + ',' + indexVariable + '){'
-                +   compiledContents
-                + '});';
+    compiled += '_.each(__tmp, ' +
+                'function(' + elementVariable + ',' + indexVariable + ') {' +
+                  compiledContents +
+                '});';
   }
 
   // Add the empty remaining part, if requested
   if(ifEmpty) {
-    compiled +=   '} else {'
-                +   ifEmpty
-                + '}';
+    compiled += '} else {' +
+                  ifEmpty +
+                '}';
   }
 
   compiled += '})(_eachLoop);';
 
   callback(null, compiled);
-}
+};
 
 }); // module: tags/each.js
 
@@ -1485,30 +1502,30 @@ extendTag.isBlock = false;
 
 extendTag.compile = function(token, compiledContents, compiler, callback) {
   if(token.root.children[0] !== token) {
-    return callback(new Error(  'Compilation error: Extend tag must be defined '
-                              + 'at the very beginning of the template.')
-                              );
+    return callback(new Error('Compilation error: Extend tag must be defined ' +
+                              'at the very beginning of the template.'
+                              ));
   }
 
   var parsed = token.tag.match(EXTEND_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var name = parsed[1];
 
-  var compiled =   'var __originalCallback = __callback;'
-                 + '__callback = function(err, compiled) {'
-                 +   '__helpers.extend(' + name + ', __compiled, __template,'
-                 +                    '__data, __originalCallback);'
-                 + '};';
+  var compiled = 'var __originalCallback = __callback;' +
+                 '__callback = function(err, compiled) {' +
+                   '__helpers.extend(' + name + ', __compiled, __template,' +
+                                    '__data, __originalCallback);' +
+                 '};';
 
   callback(null, compiled);
-}
+};
 
 
 /**
@@ -1532,7 +1549,7 @@ helpers.extend = function(name, compiled, template, data, callback) {
   }
 
   template._renderRelative(name, data, compiled, onRendered);
-}
+};
 
 }); // module: tags/extend.js
 
@@ -1587,18 +1604,18 @@ var elseTag = intermediateTags['else'] = {};
 function createIfCondition(condition, strict) {
   var compiled;
   if(strict) {
-    compiled = 'if(' + condition + ')'
+    compiled = 'if(' + condition + ')';
   } else {
-    compiled =   'try {'
-               +   '__tmp = ' + condition
-               + '} catch(__err) {'
-               +   'if(__err instanceof ReferenceError) {'
-               +     '__tmp = false;'
-               +   '} else {'
-               +     'throw __err;'
-               +   '}'
-               + '}'
-               + 'if(__tmp)';
+    compiled = 'try {' +
+                 '__tmp = ' + condition +
+               '} catch(__err) {' +
+                 'if(__err instanceof ReferenceError) {' +
+                   '__tmp = false;' +
+                 '} else {' +
+                   'throw __err;' +
+                 '}' +
+               '}' +
+               'if(__tmp)';
   }
   return compiled;
 }
@@ -1626,10 +1643,10 @@ ifTag.compile = function(token, compiledContents,
   var parsed = token.tag.match(IF_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var condition = parsed[1];
@@ -1637,8 +1654,7 @@ ifTag.compile = function(token, compiledContents,
 
   // Handle basic if
   var compiled = createIfCondition(condition, token.options.strict);
-  compiled +=   '{'
-              +   compiledContents;
+  compiled += '{' + compiledContents;
 
   // Handle else
   var err;
@@ -1648,9 +1664,9 @@ ifTag.compile = function(token, compiledContents,
     var parsed = intermediateTag.match(ELSE_PARSE_RE);
 
     if(!parsed) {
-      err = new Error(  'Compilation error: Unable to parse tag `'
-                      + token.tag
-                      + '`.'
+      err = new Error('Compilation error: Unable to parse tag `' +
+                      token.tag +
+                      '`.'
                       );
       return;
     }
@@ -1660,9 +1676,9 @@ ifTag.compile = function(token, compiledContents,
       compiled += '} else {';
     } else {
       appendEnd.push('}');
-      compiled +=   '} else {'
-                  + createIfCondition(condition, token.options.strict)
-                  + '{'
+      compiled += '} else {' +
+                  createIfCondition(condition, token.options.strict) +
+                  '{';
     }
 
     compiled += compiledIntermediate[index];
@@ -1674,14 +1690,14 @@ ifTag.compile = function(token, compiledContents,
   // Return
   compiled += appendEnd.join('');
   callback(null, compiled);
-}
+};
 
 }); // module: tags/if.js
 
 require.register("tags/ifblock.js", function(module, exports, require){
 /*!
  * Coolony's Kiwi
- * Copyright �2012 Pierre Matri <pierre.matri@coolony.com>
+ * Copyright ©2012 Pierre Matri <pierre.matri@coolony.com>
  * MIT Licensed
  */
 
@@ -1724,20 +1740,20 @@ ifBlockTag.compile = function(token, compiledContents,
   var parsed = token.tag.match(IFBLOCK_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var name = parsed[1];
 
-  var compiled =   'if(!_.isUndefined(__blocks["' + name + '"])) {'
-                 +   compiledContents
-                 + '}'
+  var compiled = 'if(!_.isUndefined(__blocks["' + name + '"])) {' +
+                   compiledContents +
+                 '}';
 
   callback(null, compiled);
-}
+};
 
 }); // module: tags/ifblock.js
 
@@ -1793,21 +1809,21 @@ includeTag.compile = function(token, compiledContents, compiler, callback) {
   var parsed = token.tag.match(INCLUDE_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var name = parsed[1];
 
   compiler.__compilationEnd.unshift('});');
-  var compiled =   '__helpers.include(' + name + ', __template,'
-                 +                    '__data, function(err, rendered) {'
-                 +   '__acc.push(rendered);';
+  var compiled = '__helpers.include(' + name + ', __template,' +
+                                    '__data, function(err, rendered) {' +
+                   '__acc.push(rendered);';
 
   callback(null, compiled);
-}
+};
 
 
 /**
@@ -1831,7 +1847,7 @@ helpers.include = function(name, template, data, callback) {
   }
 
   template._renderRelative(name, data, null, onRendered);
-}
+};
 
 }); // module: tags/include.js
 
@@ -1898,7 +1914,7 @@ variableTag.beforeProcessor = function(source, compiler, callback) {
     return '{{= :' + compiler.__print.length + ' ' + contents + '}}';
   });
   callback(null, source);
-}
+};
 
 
 /**
@@ -1923,51 +1939,51 @@ function createPrintTagCompiler(defaultFilters) {
     var parsed = token.tag.match(TAG_PARSE_RE);
 
     if(!parsed) {
-      return callback(new Error(  'Compilation error: Unable to parse tag `'
-                                + token.tag
-                                + '`.')
-                                );
+      return callback(new Error('Compilation error: Unable to parse tag `' +
+                                token.tag +
+                                '`.'
+                                ));
     }
 
     // Handle decompiler
     if(parsed[1]) {
-      var key = parseInt(parsed[1]) - 1
+      var key = parseInt(parsed[1], 10) - 1;
       token.__originalTag = compiler.__print[key];
     }
 
     var contents = parsed[2];
     var filters = parsed[3] ? parseFilters(parsed[3], defaultFilters) :
                               defaultFilters;
-    var contents =   '__tools.filter('
-                   + contents
-                   + ', '
-                   + '[' + filters.join(',') + ']'
-                   + ')';
+    contents = '__tools.filter(' +
+               contents +
+               ', ' +
+               '[' + filters.join(',') + ']' +
+               ')';
 
     var ret;
 
     if(!token.options.strict) {
-      ret =   'try {'
-            +   'var __tmp = ' + contents + ';'
-            + '} catch(__err) {'
-            +   'if(__err instanceof ReferenceError) {'
-            +     '__tmp = "";'
-            +   '} else {'
-            +     'throw __err;'
-            +   '}'
-            + '}'
-            + '__acc.push(__tmp);';
+      ret = 'try {' +
+              'var __tmp = ' + contents + ';' +
+            '} catch(__err) {' +
+              'if(__err instanceof ReferenceError) {' +
+                '__tmp = "";' +
+              '} else {' +
+                'throw __err;' +
+              '}' +
+            '}' +
+            '__acc.push(__tmp);';
     } else {
       ret = '__acc.push(' + contents + ');';
     }
     callback(null, ret);
-  }
+  };
 
   compiler.untokenize = function(token, compiler) {
     return token.__originalTag ?
              token.__originalTag :
              ('{{' + token.tag + '}}');
-  }
+  };
 
   return compiler;
 }
@@ -1987,7 +2003,7 @@ function parseFilters(filters, defaults) {
   var raw = false;
   filters = filters.split(FILTER_SPLIT_RE)
                    .filter(function filterOne(filter) {
-                     if(filter == 'raw') {
+                     if(filter === 'raw') {
                        raw = true;
                        return false;
                      }
@@ -2000,7 +2016,8 @@ function parseFilters(filters, defaults) {
                        return '"' + filter[1] + '"';
                      }
                      var splittedArgs = filter[2].split(FILTER_SPLIT_ARGS_RE);
-                     return '["' + filter[1] + '", ' + splittedArgs.join(',') + ']';
+                     return '["' + filter[1] + '", ' +
+                            splittedArgs.join(',') + ']';
                    });
 
   if(!raw) filters = filters.concat(defaults);
@@ -2029,7 +2046,11 @@ var utils = require('../utils');
  * @see https://github.com/kof/node-jqtpl
  */
 
-var VERBATIM_RE = /\{\{\s*verbatim\s*\}\}((?:.|\n)*?)\{\{\s*\/\s*verbatim\s*\}\}|{\{\s*raw\s*\}\}((?:.|\n)*?)\{\{\s*\/\s*raw\s*\}\}/g;
+var VERBATIM_RE = new RegExp(
+  '\\{\\{\\s*verbatim\\s*\\}\\}((?:.|\\n)*?)' +
+  '\\{\\{\\s*\\/\\s*verbatim\\s*\\}\\}|' +
+  '{\\{\\s*raw\\s*\\}\\}((?:.|\\n)*?)\\{\\{\\s*\\/\\s*raw\\s*\\}\\}'
+, 'g');
 
 
 /**
@@ -2058,11 +2079,12 @@ verbatimTag.isBlock = false;
  */
 
 verbatimTag.compile = function(token, compiledContents, compiler, callback) {
-  var key = parseInt(token.tag.split(' ')[1]) - 1;
-  callback(null,   '__acc.push("'
-                 + utils.escapeCompiledString(compiler.__verbatim[key])
-                 + '");');
-}
+  var key = parseInt(token.tag.split(' ')[1], 10) - 1;
+  callback(null, '__acc.push("' +
+                 utils.escapeCompiledString(compiler.__verbatim[key]) +
+                 '");'
+                 );
+};
 
 
 /**
@@ -2083,7 +2105,7 @@ verbatimTag.beforeProcessor = function(source, compiler, callback) {
     return '{{verbatim ' + compiler.__verbatim.length + '}}';
   });
   callback(null, source);
-}
+};
 
 }); // module: tags/raw.js
 
@@ -2138,20 +2160,20 @@ tmplTag.compile = function(token, compiledContents, compiler, callback) {
   var parsed = token.tag.match(TAG_PARSE_RE);
 
   if(!parsed) {
-    return callback(new Error(  'Compilation error: Unable to parse tag `'
-                              + token.tag
-                              + '`.')
-                              );
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
   }
 
   var nested = parsed[1];
 
   compiler.__compilationEnd.unshift('});');
-  callback(null,   '__template._nest(' + nested + ', __data, '
-                 +                    'function(err, rendered){'
-                 +   '__acc.push(rendered);'
+  callback(null, '__template._nest(' + nested + ', __data, ' +
+                                    'function(err, rendered){' +
+                   '__acc.push(rendered);'
                  );
-}
+};
 
 }); // module: tags/tmpl.js
 
@@ -2198,7 +2220,7 @@ var DEFAULTS = {
   _parent: null,
   _cacheAttachment: '_cache',
   _cacheTmplAttachment: '_nestCache'
-}
+};
 var TEMPLATE_EXPORTS = {filter: filter, utils: utils, tools: tools};
 
 
@@ -2253,7 +2275,7 @@ function Template(str, options) {
 
 Template.prototype._getCache = function() {
   return this.options.cacheContext[this.options._cacheProp];
-}
+};
 
 
 /**
@@ -2266,7 +2288,7 @@ Template.prototype._getCache = function() {
 
 Template.prototype.loadFile = function(filePath, callback) {
  callback(new Error('Client mode does not support reading from file.'));
-}
+};
 
 
 /**
@@ -2284,7 +2306,7 @@ Template.prototype.render = function(data, callback) {
     callback = data;
     data = {};
   }
-  
+
   // Data defaults
   if(!data) data = {};
 
@@ -2302,8 +2324,8 @@ Template.prototype.render = function(data, callback) {
   this._compile(function(err){
     if(err) return callback(err);
     _this._renderCompiled(data, callback);
-  })
-}
+  });
+};
 
 
 /**
@@ -2315,10 +2337,10 @@ Template.prototype.render = function(data, callback) {
  * @param {Function} callback
  * @api public
  */
- 
+
 Template.prototype.loadAndRender = function(filePath, data, callback) {
  callback(new Error('Client mode does not support reading from file.'));
-}
+};
 
 
 /**
@@ -2338,7 +2360,7 @@ Template.prototype._renderCompiled = function onRendered(data, callback) {
   } catch(err) {
     callback(err);
   }
-}
+};
 
 
 /**
@@ -2370,7 +2392,7 @@ Template.prototype._compile = function(callback) {
     // Invoke the callback
     callback(null, compiled);
   });
-}
+};
 
 
 /**
@@ -2393,7 +2415,7 @@ Template.prototype._nest = function(nested, data, callback) {
     if(err) return callback(err);
     callback(null, rendered);
   });
-}
+};
 
 
 /**
@@ -2440,7 +2462,7 @@ Template.prototype._renderRelative = function(name, data, rendered, callback) {
   } else {
     this.options.lookup(name, this, onTemplateLocated);
   }
-}
+};
 
 
 /**
@@ -2452,14 +2474,14 @@ Template.prototype._renderRelative = function(name, data, rendered, callback) {
 
 Template.prototype._cacheKey = function() {
   return this.options.path || this.template || null;
-}
+};
 
 
 /**
  * Module exports
  */
 
-exports = module.exports = Template;
+module.exports = Template;
 
 }); // module: template.js
 
@@ -2524,7 +2546,7 @@ function BaseToken(root, parent, options) {
 
 BaseToken.prototype.compile = function(compiler, callback) {
   callback(new Error('Stub method BaseToken#compile must be overloaded'));
-}
+};
 
 
 /*
@@ -2538,13 +2560,13 @@ BaseToken.prototype.compile = function(compiler, callback) {
 
 BaseToken.prototype.lookupTag = function(tag) {
   if(tags[tag]) return tags[tag];
-  if(   this.tagType
-     && this.tagType.intermediateTags
-     && this.tagType.intermediateTags[tag]) {
+  if(this.tagType && this.tagType.intermediateTags &&
+                     this.tagType.intermediateTags[tag]) {
+
     this.tagType.intermediateTags[tag].isIntermediate = true;
     return this.tagType.intermediateTags[tag];
   }
-}
+};
 
 
 /*
@@ -2577,12 +2599,12 @@ inherits(LiteralToken, BaseToken);
  */
 
 LiteralToken.prototype.compile = function(compiler, callback) {
-  this._compiled =   '__acc.push("'
-                   + utils.escapeCompiledString(this.literal)
-                   + '");';
+  this._compiled = '__acc.push("' +
+                   utils.escapeCompiledString(this.literal) +
+                   '");';
 
   callback(null, this._compiled);
-}
+};
 
 
 /*
@@ -2620,30 +2642,30 @@ RootToken.prototype.compile = function(compiler, callback) {
 
   function onCompiled(err, compiled) {
     if(err) return callback(err);
-    var compiled =   'var __this = this;'
-                   + 'var __acc = [];'
-                   + 'var __blocks = {};'
-                   + 'if(__template.options && __template.options._parent) {'
-                   +   '__blocks = __template.options._parent.blocks;'
-                   + '}'
-                   + 'var __tmp;'
-                   + 'var __err;'
-                   + '__data = __data || {};'
-                   + headDeclarations.join('')
-                   + 'with(__data) {'
-                   +   compiled
-                   +   footDeclarations.join('')
-                   +   'var __compiled = new String(__acc.join(""));'
-                   +   '__compiled.blocks = __blocks;'
-                   +   '__callback(null, __compiled);'
-                   +   compiler.__compilationEnd.join('')
-                   + '}';
+    compiled = 'var __this = this;' +
+               'var __acc = [];' +
+               'var __blocks = {};' +
+               'if(__template.options && __template.options._parent) {' +
+                 '__blocks = __template.options._parent.blocks;' +
+               '}' +
+               'var __tmp;' +
+               'var __err;' +
+               '__data = __data || {};' +
+               headDeclarations.join('') +
+               'with(__data) {' +
+                 compiled +
+                 footDeclarations.join('') +
+                 'var __compiled = new String(__acc.join(""));' +
+                 '__compiled.blocks = __blocks;' +
+                 '__callback(null, __compiled);' +
+                 compiler.__compilationEnd.join('') +
+               '}';
     _this._compiled = compiled;
     callback(null, compiled);
-  };
+  }
 
   utils.compileTokens(this.children, compiler, onCompiled);
-}
+};
 
 
 /*
@@ -2710,7 +2732,7 @@ BlockToken.prototype.compile = function(compiler, callback) {
   }
 
   utils[compilationFunction](this.children, compiler, onContentsCompiled);
-}
+};
 
 
 /*
@@ -2755,7 +2777,7 @@ LeafToken.prototype.compile = function(compiler, callback) {
   }
 
   var compiled = this.tagType.compile(this, null, compiler, onCompiled);
-}
+};
 
 
 /*
@@ -2770,7 +2792,7 @@ LeafToken.prototype.untokenize = function(compiler) {
   return this.tagType.compile.untokenize ?
            this.tagType.compile.untokenize(this, compiler) :
            ('{{' + this.tag + '}}');
-}
+};
 
 
 /*
@@ -2809,7 +2831,7 @@ IntermediateToken.prototype.compile = function(compiler, callback) {
   }
 
   utils.compileTokens(this.children, compiler, onContentsCompiled);
-}
+};
 
 
 /*
@@ -2823,7 +2845,7 @@ IntermediateToken.prototype.compile = function(compiler, callback) {
 
 IntermediateToken.prototype.lookupTag = function(tag) {
   return this.parent.lookupTag(tag);
-}
+};
 
 
 /**
@@ -2849,7 +2871,7 @@ function registerTag(name, tag) {
     footDeclarations.push(tag.footDeclarations);
   }
   if(tag.helpers) {
-    for(helperName in tag.helpers) {
+    for(var helperName in tag.helpers) {
       registerHelper(helperName, tag.helpers[helperName]);
     }
   }
@@ -2875,8 +2897,7 @@ function registerHelper(name, helper) {
  * Module exports
  */
 
-exports = module.exports = {
-  headDeclarations: [],
+module.exports = {
   BaseToken: BaseToken,
   RootToken: RootToken,
   BlockToken: BlockToken,
@@ -2890,7 +2911,7 @@ exports = module.exports = {
   helpers: helpers,
   registerTag: registerTag,
   registerHelper: registerHelper
-}
+};
 
 
 /*
@@ -2899,25 +2920,27 @@ exports = module.exports = {
 
 function loadTags(loadedFiles) {
   loadedFiles = loadedFiles || frame.files.requireDir(__dirname + '/tags/');
-  for(file in loadedFiles) {
+  for(var file in loadedFiles) {
     var fileTags = loadedFiles[file].tags;
     var fileHelpers = loadedFiles[file].helpers;
 
     // Process tags
-    for(tag in fileTags) {
+    for(var tag in fileTags) {
       registerTag(tag, fileTags[tag]);
     }
 
     // Process tags
     if(fileHelpers) {
-      for(helperName in fileHelpers) {
+      for(var helperName in fileHelpers) {
         registerHelper(helperName, fileHelpers[helperName]);
       }
     }
   }
 }
 
- var files = ['block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl', 'ifblock', 'as'];
+ var files = [
+   'block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl', 'ifblock', 'as'
+ ];
  var acc = {};
  _.each(files, function(file) {
    acc[file] = require('./tags/' + file);
@@ -2971,14 +2994,14 @@ exports.createSimpleTag = function createSimpleTag(name, fn) {
       splitted[0] = '__data';
       var args = splitted.join(',');
 
-      var compiled =   '__acc.push(__tools.tools.escapeIfUnsafe('
-                     +   '__helpers["' + name + '"](' + args + ')'
-                     + '));';
+      var compiled = '__acc.push(__tools.tools.escapeIfUnsafe(' +
+                       '__helpers["' + name + '"](' + args + ')' +
+                     '));';
 
       callback(null, compiled);
     }
-  }
-}
+  };
+};
 
 
 /**
@@ -2991,7 +3014,7 @@ exports.createSimpleTag = function createSimpleTag(name, fn) {
 
 exports.createFilter = function createFilter(name, fn) {
   filter.filters[name] = fn;
-}
+};
 
 
 /**
@@ -3009,7 +3032,14 @@ var escape = exports.escape = function(str) {
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/'/g, "&#146;");
-}
+};
+
+
+/**
+ * Export SafeString.
+ */
+
+var SafeString = exports.SafeString = String;
 
 
 /**
@@ -3021,10 +3051,9 @@ var escape = exports.escape = function(str) {
  */
 
 exports.safe = function(str) {
-  if(!(str instanceof String)) str = new String(str);
-  str.safe = true;
+  if(!(str instanceof SafeString)) str = new SafeString(str);
   return str;
-}
+};
 
 
 /**
@@ -3036,8 +3065,8 @@ exports.safe = function(str) {
  */
 
 exports.escapeIfUnsafe = function(str) {
-  return str.safe ? str : escape(str);
-}
+  return str instanceof SafeString ? str : escape(str);
+};
 
 
 /**
@@ -3049,6 +3078,7 @@ exports.registerTag = token.registerTag;
 exports.registerHelper = token.registerHelpers;
 exports.escapeCompiledString = utils.escapeCompiledString;
 exports.applyAll = utils.applyAll;
+exports.safeString = String;
 
 
 /**
@@ -3123,7 +3153,7 @@ function tmpAsyncForEach(array, fn, args, callback) {
   } else {
     callback();
   }
-};
+}
 var asyncForEach = frame ? frame.asyncForEach : tmpAsyncForEach;
 
 
@@ -3150,7 +3180,7 @@ var apply = exports.apply = function(input, processor, args, callback) {
   }
 
   processor.apply(this, [input].concat(args || []).concat([done]));
-}
+};
 
 
 /**
@@ -3184,7 +3214,7 @@ exports.applyAll = function(input, processors, args, callback) {
     args = null;
   }
   asyncForEach(processors, applyOne, done);
-}
+};
 
 /**
  * Asynchronously compiles `tokens`, and invoke
@@ -3232,8 +3262,8 @@ exports.compileTokens = function(tokens, compiler, callback) {
   compileTokenArray(tokens, compiler, function(err, compiled) {
     if(err) return callback(err);
     callback(null, compiled.join(''));
-  })
-}
+  });
+};
 
 
 /**
@@ -3249,7 +3279,7 @@ exports.escapeCompiledString = function(str) {
             .replace(/\n/g, '\\n')
             .replace(/\r/g, '\\r')
             .replace(/\t/g, '\\t');
-}
+};
 
 
 /**
@@ -3261,8 +3291,8 @@ exports.escapeCompiledString = function(str) {
  */
 
 exports.isIterable = function(input) {
-  return typeof input === 'object' && !(input instanceof String)
-}
+  return typeof input === 'object' && !(input instanceof String);
+};
 
 
 /**
@@ -3282,7 +3312,7 @@ exports.inherits = function(subclass, superclass) {
   subclass.prototype.constructor = subclass;
   subclass._superclass = superclass;
   subclass._superproto = superclass.prototype;
-}
+};
 
 
 /**
