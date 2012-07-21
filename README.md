@@ -16,6 +16,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Full-featured**. Lots of filters are available, and it can't be easier to add your own if you want.
 * **Secure**. All output is escaped by default.
 * **Clean**. Kiwi won't mess with your prototypes, and won't extend any of the built-in JavaScript objects.
+* **Good looking**. Kiwi is tested with [JSHint](https://github.com/jshint/node-jshint/) to ensure code quality.
 
 
 As an additional feature, you can use Kiwi in client mode, with – almost – all features available, except for a few involving the file system (mainly `require` and `include`).
@@ -578,6 +579,11 @@ new Template(tpl).render({name: 'Kiwi'}, callback);
 // Result
 <div>Hello, Kiwi</div>
 ```
+
+
+## Using JSHint
+
+In order to check Kiwi's code with JSHint, just run `make lint` from the Kiwi directory.
 
 
 ## Performance tips
