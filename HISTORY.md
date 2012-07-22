@@ -6,6 +6,10 @@
 
 * Default view lookup function now looks for template paths relative to `process.cwd()`.
 
+### Improvements
+
+* Added JSLint testing.
+
 ## 0.1.3
 
 ### New fratures
