@@ -551,7 +551,7 @@ For better security, just like with the `${}` tag, all output of custom tags def
 
 ```javascript
 kiwi.tools.createSimpleTag('css', function(context, name) {
-  return kiwi.tools.safe('<link rel="stylesheet" type="text/css" src="' + name + '">');
+  return kiwi.tools.safe('<link rel="stylesheet" type="text/css" href="' + name + '">');
 });
 ```
 
