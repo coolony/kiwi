@@ -363,7 +363,7 @@ new Template(tpl2).render({ nested: nested }, callback);
 
 // Result
 <div>Hello!</div>
-
+```
 
 ### {{block}}
 
@@ -500,7 +500,7 @@ new Template(tpl).render({}, callback);
 <div>${a}</div>
 ```
 
-### {{#}} and {{comment}}
+### {{#}} and { {comment}}
 
 These tags are comments, which are never rendered.
 
