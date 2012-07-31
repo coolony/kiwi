@@ -5,6 +5,7 @@
 ### New features
 
 * Default view lookup function now looks for template paths relative to `process.cwd()`.
+* `extend` and `include` tag now support a Template instance as argument, and thus, are made available in client mode.
 
 ### Improvements
 

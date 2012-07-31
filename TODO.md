@@ -8,3 +8,4 @@
 * Performance improvements for blocks
 * New tests for Kiwi core
 * Remove dependency for Underscore.js in the browser version
+* Add documentation for tags

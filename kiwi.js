@@ -2429,11 +2429,9 @@ Template.prototype._nest = function(nested, data, callback) {
 
 Template.prototype._renderRelative = function(name, data, rendered, callback) {
   var _this = this;
-  var options = _.clone(this.options);
-  options._parent = rendered;
-  var template = new Template(options);
-  var cacheKey = 'path::' + this._cacheKey() + '::' + name;
+  var cacheKey;
   var cachedPath;
+  var template;
 
   function onTemplateLocated(err, filePath) {
     if(err) return callback(err);
@@ -2452,15 +2450,29 @@ Template.prototype._renderRelative = function(name, data, rendered, callback) {
     if(err) return callback(err);
     callback(null, result);
   }
-
-  if(this.options.cache) {
-    cachedPath = this._getCache().get(cacheKey);
-  }
-
-  if(cachedPath) {
-    template.loadFile(cachedPath, onTemplateLoaded);
+  
+  if(name instanceof Template) {
+  
+    template = name;
+    template.options._parent = rendered;
+    template.render(data, onTemplateRendered);
+    
   } else {
-    this.options.lookup(name, this, onTemplateLocated);
+  
+    var options = _.clone(this.options);
+    options._parent = rendered;
+    template = new Template(options);
+    cacheKey = 'path::' + this._cacheKey() + '::' + name;
+    
+    // Handle cache
+    if(this.options.cache) {
+      cachedPath = this._getCache().get(cacheKey);
+    }
+    if(cachedPath) {
+      template.loadFile(cachedPath, onTemplateLoaded);
+    } else {
+      this.options.lookup(name, this, onTemplateLocated);
+    }
   }
 };
 
@@ -2939,7 +2951,7 @@ function loadTags(loadedFiles) {
 }
 
  var files = [
-   'block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl', 'ifblock', 'as'
+   'block', 'comment', 'each', 'if', 'print', 'raw', 'tmpl', 'ifblock', 'as', 'include', 'extend'
  ];
  var acc = {};
  _.each(files, function(file) {

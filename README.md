@@ -19,7 +19,7 @@ Kiwi is a cool JavaScript template engine lovingly built from the ground up for 
 * **Good looking**. Kiwi is tested with [JSHint](https://github.com/jshint/node-jshint/) to ensure code quality.
 
 
-As an additional feature, you can use Kiwi in client mode, with – almost – all features available, except for a few involving the file system (mainly `require` and `include`).
+As an additional feature, you can use Kiwi in client mode, with – almost – all features available, except for the few involving the file system.
 
 
 ## Syntax example
@@ -41,6 +41,8 @@ As an additional feature, you can use Kiwi in client mode, with – almost – a
   </body>
 </html>
 ```
+
+Please note this example template expects `name` and `title` variables to always be defined.
 
 
 ## Server-side installation
@@ -328,7 +330,9 @@ new Template(tpl).render({nested: '${a}', a: 'Kiwi'}, callback);
 
 ### {{include}}
 
-Used for composition of templates. Loads a nested template from disk and renders it within the rendered output of the parent template.
+Used for composition of templates. It renders a nested template within the rendered output of the current template.
+
+#### Loading nested template from disk
 
 ```
 // foo.kiwi
@@ -343,6 +347,23 @@ new Template(tpl).render({}, callback);
 // Result
 <div>Hello!</div>
 ```
+
+#### Using directly another `Template` instance
+
+```
+// Template 1
+Hello!
+
+// Template 2
+<div>{{include nested}}</div>
+
+// Code
+var nested = new Template(tpl1);
+new Template(tpl2).render({ nested: nested }, callback);
+
+// Result
+<div>Hello!</div>
+
 
 ### {{block}}
 
@@ -425,7 +446,9 @@ new Template(tpl).render({}, callback);
 
 ### {{extend}}
 
-Makes the current template extend another template loaded from disk.
+This makes the current template extend another template.
+
+#### Loading parent template from disk
 
 ```
 // foo.kiwi
@@ -436,7 +459,25 @@ Hello, {{block place}}world{{/block}}!
 {{block place}}kiwi{{/block}}
 
 // Code
-new Template(tpl).render({}, callback);
+new Template(tpl2).render({}, callback);
+
+// Result
+<div>Hello, kiwi!</div>
+```
+
+#### Using directly another `Template` instance
+
+```
+// Template 1
+Hello, {{block place}}world{{/block}}!
+
+// Template 2
+{{extend parent}}
+{{block place}}kiwi{{/block}}
+
+// Code
+var parent = new Template(tpl1);
+new Template(tpl2).render({ parent: parent }, callback);
 
 // Result
 <div>Hello, kiwi!</div>
