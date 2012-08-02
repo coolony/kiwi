@@ -267,7 +267,7 @@ By default, Kiwi sets a number of variables available within the loop:
 // Template
 <ul>
 {{each(i, name) movies}}
-  <li>${_eachLoop.counter}. ${name}</li>
+  <li>${$each.counter}. ${name}</li>
 {{/each}}
 </ul>
 
