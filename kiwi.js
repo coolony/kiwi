@@ -1042,7 +1042,7 @@ exports.tools = require('./tools');
  * Version
  */
 
-exports.version = '0.2';
+exports.version = '0.2.0';
 
 
 /**
