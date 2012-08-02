@@ -1,7 +1,7 @@
 {
   "name": "kiwi",
   "description": "Simple, modular, fast and lightweight template engine, based on jQuery templates syntax.",
-  "version": "0.1.3",
+  "version": "0.2",
   "author": "Pierre Matri <pierre.matri@coolony.com>",
   "contributors": [
     { "name": "Pierre Matri", "email": "pierre.matri@coolony.com" }
