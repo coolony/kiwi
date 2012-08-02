@@ -179,15 +179,15 @@ Compiler.prototype.compile = function(callback) {
     if(err) return callback(err);
     //console.log(compiled);
 
-    var func = new Function("__template",
-                            "__tools",
+    var func = new Function("$template",
+                            "$tools",
                             "_",
-                            "__data",
-                            "__helpers",
-                            "__callback",
+                            "$data",
+                            "$helpers",
+                            "$callback",
                             compiled);
 
-    func.__helpers = _this.helpers;
+    func.$helpers = _this.helpers;
 
     callback(null, func);
   }
@@ -1110,7 +1110,7 @@ asTag.compile = function(token, compiledContents,
                    'var __acc = [];' +
                    compiledContents +
                    'var __joined = __acc.join("");' +
-                   '__data["' + name + '"] = __tools.tools.safe(__joined);' +
+                   '$data["' + name + '"] = $tools.tools.safe(__joined);' +
                  '})(__acc);';
 
   callback(null, compiled);
@@ -1337,7 +1337,8 @@ var emptyTag = intermediateTags.empty = {};
  */
 
 eachTag.isBlock = true;
-eachTag.headDeclarations = 'var _eachLoop;';
+eachTag.headDeclarations = 'var $each;' +
+                           'var _eachLoop;';
 
 
 /**
@@ -1417,7 +1418,7 @@ eachTag.compile = function(token, compiledContents,
     compiled += 'var __eachLoopCounter = 0;' +
                 '_.each(__tmp, ' +
                 'function(' + elementVariable + ',' + indexVariable + '){' +
-                  '_eachLoop = {' +
+                  '$each = _eachLoop = {' +
                     'size: __eachLoopLength,' +
                     'counter0: __eachLoopCounter,' +
                     'counter: __eachLoopCounter + 1,' +
@@ -1445,7 +1446,7 @@ eachTag.compile = function(token, compiledContents,
                 '}';
   }
 
-  compiled += '})(_eachLoop);';
+  compiled += '})($each);';
 
   callback(null, compiled);
 };
@@ -1518,10 +1519,10 @@ extendTag.compile = function(token, compiledContents, compiler, callback) {
 
   var name = parsed[1];
 
-  var compiled = 'var __originalCallback = __callback;' +
-                 '__callback = function(err, compiled) {' +
-                   '__helpers.extend(' + name + ', __compiled, __template,' +
-                                    '__data, __originalCallback);' +
+  var compiled = 'var __originalCallback = $callback;' +
+                 '$callback = function(err, compiled) {' +
+                   '$helpers.extend(' + name + ', __compiled, $template,' +
+                                    '$data, __originalCallback);' +
                  '};';
 
   callback(null, compiled);
@@ -1818,8 +1819,8 @@ includeTag.compile = function(token, compiledContents, compiler, callback) {
   var name = parsed[1];
 
   compiler.__compilationEnd.unshift('});');
-  var compiled = '__helpers.include(' + name + ', __template,' +
-                                    '__data, function(err, rendered) {' +
+  var compiled = '$helpers.include(' + name + ', $template,' +
+                                    '$data, function(err, rendered) {' +
                    '__acc.push(rendered);';
 
   callback(null, compiled);
@@ -1954,7 +1955,7 @@ function createPrintTagCompiler(defaultFilters) {
     var contents = parsed[2];
     var filters = parsed[3] ? parseFilters(parsed[3], defaultFilters) :
                               defaultFilters;
-    contents = '__tools.filter(' +
+    contents = '$tools.filter(' +
                contents +
                ', ' +
                '[' + filters.join(',') + ']' +
@@ -2169,7 +2170,7 @@ tmplTag.compile = function(token, compiledContents, compiler, callback) {
   var nested = parsed[1];
 
   compiler.__compilationEnd.unshift('});');
-  callback(null, '__template._nest(' + nested + ', __data, ' +
+  callback(null, '$template._nest(' + nested + ', $data, ' +
                                     'function(err, rendered){' +
                    '__acc.push(rendered);'
                  );
@@ -2657,19 +2658,19 @@ RootToken.prototype.compile = function(compiler, callback) {
     compiled = 'var __this = this;' +
                'var __acc = [];' +
                'var __blocks = {};' +
-               'if(__template.options && __template.options._parent) {' +
-                 '__blocks = __template.options._parent.blocks;' +
+               'if($template.options && $template.options._parent) {' +
+                 '__blocks = $template.options._parent.blocks;' +
                '}' +
                'var __tmp;' +
                'var __err;' +
-               '__data = __data || {};' +
+               '$data = $data || {};' +
                headDeclarations.join('') +
-               'with(__data) {' +
+               'with($data) {' +
                  compiled +
                  footDeclarations.join('') +
                  'var __compiled = new String(__acc.join(""));' +
                  '__compiled.blocks = __blocks;' +
-                 '__callback(null, __compiled);' +
+                 '$callback(null, __compiled);' +
                  compiler.__compilationEnd.join('') +
                '}';
     _this._compiled = compiled;
@@ -3003,11 +3004,11 @@ exports.createSimpleTag = function createSimpleTag(name, fn) {
   token.tags[name] = {
     compile: function(token, compiledContents, compiler, callback) {
       var splitted = token.tag.split(ARGS_SPLIT_RE);
-      splitted[0] = '__data';
+      splitted[0] = '$data';
       var args = splitted.join(',');
 
-      var compiled = '__acc.push(__tools.tools.escapeIfUnsafe(' +
-                       '__helpers["' + name + '"](' + args + ')' +
+      var compiled = '__acc.push($tools.tools.escapeIfUnsafe(' +
+                       '$helpers["' + name + '"](' + args + ')' +
                      '));';
 
       callback(null, compiled);

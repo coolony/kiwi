@@ -67,7 +67,7 @@ npm install https://github.com/coolony/kiwi/tarball/master
 var kiwi = require('kiwi');
 
 var template = '<p>Hello, ${name}!</p>';
-new kiwi.Template(template).render({name: "Kiwi"}, function onRendered(err, rendered) {
+new kiwi.Template(template).render({ name: "Kiwi" }, function onRendered(err, rendered) {
   console.log('Rendered template is: ' + rendered);
 });
 ```
@@ -78,7 +78,7 @@ new kiwi.Template(template).render({name: "Kiwi"}, function onRendered(err, rend
 var kiwi = require('kiwi');
 
 var template = new kiwi.Template().loadFile('template.kiwi', function onLoaded(err) {
-  template.render({name: "Kiwi"}, function onRendered(err, rendered) {
+  template.render({ name: "Kiwi" }, function onRendered(err, rendered) {
     console.log('Rendered template is: ' + rendered);
   });
 });
@@ -89,7 +89,7 @@ In order to make the process of loading and rendering a template easier, Kiwi do
 ```javascript
 var kiwi = require('kiwi');
 
-var template = new kiwi.Template().loadAndRender('template.kiwi', {name: "Kiwi"}, function onRendered(err, rendered) {
+var template = new kiwi.Template().loadAndRender('template.kiwi', { name: "Kiwi" }, function onRendered(err, rendered) {
   console.log('Rendered template is: ' + rendered);
 });
 ```
@@ -97,6 +97,13 @@ var template = new kiwi.Template().loadAndRender('template.kiwi', {name: "Kiwi"}
 ### Client-side dependencies
 
 Please note that client-side usage requires [Underscore.js](http://underscorejs.org/) to be included in the page. This requirement will be removed in a future release.
+
+
+## Accessing variables
+
+Every key of the optional object passed as argument to the `Template#render` method will be made available for use in your template. You can also access your object with `$data`.
+
+For example, when passing `{ name: 'Kiwi'}`, you will be able to use the `name` variable in your template, or `$data.name`.
 
 
 ## Available tags
@@ -113,7 +120,7 @@ The `${varOrExpression}` tag inserts the value of `varOrExpression` in the templ
 <div>{{= a}}</div>
 
 // Code
-new Template(tpl).render({a: 'kiwi'}, callback);
+new Template(tpl).render({ a: 'kiwi' }, callback);
 
 // Result
 <div>kiwi</div>
@@ -129,7 +136,7 @@ The `${}` tag optionally supports filters.
 <div>${a|replace('k', 'w')|capitalize}</div>
 
 // Code
-new Template(tpl).render({a: 'kiwi'}, callback);
+new Template(tpl).render({ a: 'kiwi' }, callback);
 
 // Result
 <div>Wiwi</div>
@@ -144,7 +151,7 @@ The `${}` tag escapes its output by default.
 <div>${a}</div>
 
 // Code
-new Template(tpl).render({a: '<b>kiwi</b>'}, callback);
+new Template(tpl).render({ a: '<b>kiwi</b>' }, callback);
 
 // Result
 <div>&lt;b&gt;kiwi&lt;/b&gt;</div>
@@ -157,7 +164,7 @@ You can optionally insert unescaped data by using the special `raw`filter.
 <div>${a|raw}</div>
 
 // Code
-new Template(tpl).render({a: '<b>kiwi</b>'}, callback);
+new Template(tpl).render({ a: '<b>kiwi</b>' }, callback);
 
 // Result
 <div><b>kiwi</b></div>
@@ -175,7 +182,7 @@ Used for conditional insertion of content. Renders the content between the openi
 <div>{{if !show}}Bar{{/if}}</div>
 
 // Code
-new Template(tpl).render({show:true}, callback);
+new Template(tpl).render({ show:true }, callback);
 
 // Result
 <div>Foo</div>
@@ -191,7 +198,7 @@ new Template(tpl).render({show:true}, callback);
 <div>{{if a === 2}}Moo{{else b === 3}}Foo{{else}}Kiwi{{/if}}</div>
 
 // Code
-new Template(tpl).render({a: 1, b: 2}, callback);
+new Template(tpl).render({ a: 1, b: 2 }, callback);
 
 // Result
 <div>Kiwi</div>
@@ -212,7 +219,7 @@ Used to iterate over a data array, and render the content between the opening an
 </ul>
 
 // Code
-new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
+new Template(tpl).render({ movies: [ 'Meet Joe Black', 'City Hunter' ] }, callback);
 
 // Result
 <ul>
@@ -234,7 +241,7 @@ The block of template markup between the opening and closing tags `{{each}}` and
 </ul>
 
 // Code
-new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
+new Template(tpl).render({ movies: [ 'Meet Joe Black', 'City Hunter' ] }, callback);
 
 // Result
 <ul>
@@ -247,14 +254,14 @@ new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
 
 By default, Kiwi sets a number of variables available within the loop:
 
-* **_eachLoop.size**: The number of items in the collection
-* **_eachLoop.counter**: The current iteration of the loop (1-indexed)
-* **_eachLoop.counter0**: The current iteration of the loop (0-indexed)
-* **_eachLoop.revcounter**: The number of iterations from the end of the loop (1-indexed)
-* **_eachLoop.revcounter0**: The number of iterations from the end of the loop (0-indexed)
-* **_eachLoop.first**: `true` if this is the first time through the loop
-* **_eachLoop.last**: `true` if this is the last time through the loop
-* **_eachLoop.parentLoop**: For nested loops, this is the loop "above" the current one
+* **$each.size**: The number of items in the collection
+* **$each.counter**: The current iteration of the loop (1-indexed)
+* **$each.counter0**: The current iteration of the loop (0-indexed)
+* **$each.revcounter**: The number of iterations from the end of the loop (1-indexed)
+* **$each.revcounter0**: The number of iterations from the end of the loop (0-indexed)
+* **$each.first**: `true` if this is the first time through the loop
+* **$each.last**: `true` if this is the last time through the loop
+* **$each.parentLoop**: For nested loops, this is the loop "above" the current one
 
 ```
 // Template
@@ -265,7 +272,7 @@ By default, Kiwi sets a number of variables available within the loop:
 </ul>
 
 // Code
-new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
+new Template(tpl).render({ movies: [ 'Meet Joe Black', 'City Hunter' ] }, callback);
 
 // Result
 <ul>
@@ -273,6 +280,8 @@ new Template(tpl).render({movies: ['Meet Joe Black', 'City Hunter']}, callback);
   <li>2. City Hunter</li>
 </ul>
 ```
+
+In order to maintain compatibility with earlier Kiwi releases, `_eachLoop` is provided as an alias for `$each`. This will be dropped in a next version.
 
 #### Empty clause
 
@@ -289,7 +298,7 @@ The `{{each}}` tag can take an optional `{{ empty }}` clause that will be displa
 </ul>
 
 // Code
-new Template(tpl).render({movies: []}, callback);
+new Template(tpl).render({ movies: [] }, callback);
 
 // Result
 <ul>
@@ -322,7 +331,7 @@ Used for composition of templates. Renders a nested template from a string withi
 <div>{{tmpl nested}}</div>
 
 // Code
-new Template(tpl).render({nested: '${a}', a: 'Kiwi'}, callback);
+new Template(tpl).render({ nested: '${a}', a: 'Kiwi' }, callback);
 
 // Result
 <div>Kiwi</div>
@@ -638,7 +647,7 @@ In order to avoid memory leaks when using heavily dynamic templates in `tmpl`, t
 You may choose to use a standard cache instead, but be aware that this could easily lead to huge memory leaks if your nested templates are heavily dynamic.
 It is included for compatibility with jQuery templates / jqTpl, but you should probably not use it at all.
 * **Consider disabling `eachLoopCounters`**
-Kiwi adds counters to `each` loop, which allows you, for example, to access the current iteration count with `_eachLoop.counter`. If you don't need this functionality, disabling it will slightly increase Kiwi's performance when using `each` loops.
+Kiwi adds counters to `each` loop, which allows you, for example, to access the current iteration count with `$each.counter`. If you don't need this functionality, disabling it will slightly increase Kiwi's performance when using `each` loops.
 
 
 ## License

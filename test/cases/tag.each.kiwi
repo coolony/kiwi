@@ -1,13 +1,13 @@
 {{each arr}}u{{/each}}
 {{each arr}}${$index}.${$value}{{/each}}
 {{each(v, i) arr}}${i}.${v}{{/each}}
-{{each arr}}${_eachLoop.counter}{{/each}}
-{{each arr}}${_eachLoop.counter0}{{/each}}
-{{each arr}}${_eachLoop.revcounter}{{/each}}
-{{each arr}}${_eachLoop.revcounter0}{{/each}}
-{{each arr}}{{if _eachLoop.first}}${$value}{{/if}}{{/each}}
-{{each arr}}{{if _eachLoop.last}}${$value}{{/if}}{{/each}}
-{{each arr}}${_eachLoop.size}{{/each}}
+{{each arr}}${$each.counter}{{/each}}
+{{each arr}}${$each.counter0}{{/each}}
+{{each arr}}${$each.revcounter}{{/each}}
+{{each arr}}${$each.revcounter0}{{/each}}
+{{each arr}}{{if $each.first}}${$value}{{/if}}{{/each}}
+{{each arr}}{{if $each.last}}${$value}{{/if}}{{/each}}
+{{each arr}}${$each.size}{{/each}}
 {{each objm}}${$value}{{/each}}
 {{each(v, i) objm}}${i}.${v}{{/each}}
 {{each emptyArr}}should not be displayed{{empty}}Oops… Empty{{/each}}

@@ -11,6 +11,11 @@
 
 * Added JSLint testing.
 
+### Other changes
+
+* Internal variable name changes.
+* `_eachLoop` is now `$each`.
+
 ## 0.1.3
 
 ### New fratures
@@ -32,7 +37,6 @@
 * Added compatibility with node 0.8.x.
 * Dropped support for node < 0.6.x.
 * `Template#load` doesn't invoke callback with raw loaded file data anymore.
-
 
 ### Bug fixes
 
