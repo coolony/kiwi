@@ -47,6 +47,29 @@ describe('Extend tag', function() {
 
     template.loadFile(__dirname + '/../fixtures/dynamic.kiwi', onLoaded);
   });
+  
+  it('should extend template with Template instance as parent', function(done) {
+  
+      var parentTemplate = new Template({ cache: true });
+      
+      function onParentTemplateLoaded(err, data) {
+        should.not.exist(err);
+        template.loadFile(__dirname + '/../fixtures/dynamic.kiwi', onLoaded);
+      }
+  
+      function onLoaded(err, data) {
+        should.not.exist(err);
+        template.render({parent: parentTemplate}, onRendered)
+      }
+  
+      function onRendered(err, rendered) {
+        should.not.exist(err);
+        rendered.trim().should.equal('foo doo woo moo');
+        done(err);
+      }
+      
+      parentTemplate.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onParentTemplateLoaded);
+    });
 
   it('should properly cache paths', function(done) {
     var calls = 0;
