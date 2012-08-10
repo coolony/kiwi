@@ -177,7 +177,6 @@ Compiler.prototype.compile = function(callback) {
   // Callback for Compiler#_compileTokens
   function onCompiled(err, compiled) {
     if(err) return callback(err);
-    //console.log(compiled);
 
     var func = new Function("$template",
                             "$tools",
@@ -1337,8 +1336,7 @@ var emptyTag = intermediateTags.empty = {};
  */
 
 eachTag.isBlock = true;
-eachTag.headDeclarations = 'var $each;' +
-                           'var _eachLoop;';
+eachTag.headDeclarations = 'var $each = undefined;';
 
 
 /**
@@ -1408,7 +1406,8 @@ eachTag.compile = function(token, compiledContents,
   }
 
   // Calculate loop collection length
-  compiled +=   'var __eachLoopLength = _.size(__tmp);';
+  compiled +=   'var __eachLoopLength = _.size(__tmp);' +
+                'var _eachLoop, $each;';
 
   // Add the empty start part
   if(ifEmpty) compiled += 'if(__eachLoopLength) {';

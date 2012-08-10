@@ -75,6 +75,7 @@ cases.forEach(function(path) {
     }
 
     function onRendered(err, rendered) {
+      if(err) return done(err);
       rendered.trim().should.equal(html);
       done(err);
     }

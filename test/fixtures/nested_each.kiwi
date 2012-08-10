@@ -1,0 +1,1 @@
+{{each data}}{{if $each.first}}first {{/if}}${$index} {{each $value}}${$value} {{/each}}{{if $each.last }}last{{/if}}{{/each}}

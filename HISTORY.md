@@ -1,5 +1,11 @@
 # Kiwi's History
 
+## Head
+
+### Bug fixes
+
+* Fixed an issue which could cause Each loop counters not to work properly with nested loops.
+
 ## 0.2.0
 
 ### New features
