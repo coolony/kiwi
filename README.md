@@ -254,16 +254,16 @@ new Template(tpl).render({ movies: [ 'Meet Joe Black', 'City Hunter' ] }, callba
 
 By default, Kiwi sets a number of variables available within the loop:
 
-* **$each.size**: The number of items in the collection
-* **$each.counter**: The current iteration of the loop (1-indexed)
-* **$each.counter0**: The current iteration of the loop (0-indexed)
-* **$each.revcounter**: The number of iterations from the end of the loop (1-indexed)
-* **$each.revcounter0**: The number of iterations from the end of the loop (0-indexed)
-* **$each.first**: `true` if this is the first time through the loop
-* **$each.last**: `true` if this is the last time through the loop
-* **$each.parent**: For nested loops, this is the loop "above" the current one
-* **$each.parentIndex**: For nested loops, this is the current index of the parent loop
-* **$each.parentValue**: For nested loops, this is the current value of the parent loop
+* `$each.size`: The number of items in the collection
+* `$each.counter`: The current iteration of the loop (1-indexed)
+* `$each.counter0`: The current iteration of the loop (0-indexed)
+* `$each.revcounter`: The number of iterations from the end of the loop (1-indexed)
+* `$each.revcounter0`: The number of iterations from the end of the loop (0-indexed)
+* `$each.first`: `true` if this is the first time through the loop
+* `$each.last`: `true` if this is the last time through the loop
+* `$each.parent`: For nested loops, this is the loop "above" the current one
+* `$each.parentIndex`: For nested loops, this is the current index of the parent loop
+* `$each.parentValue`: For nested loops, this is the current value of the parent loop
 
 ```
 // Template
