@@ -2,6 +2,11 @@
 
 ## Head
 
+### Improvements
+
+* Added support for digits and underscores in tag and filter names.
+* Added helpful error messages when defining or using tag or filter names containing invalid characters.
+
 ### Bug fixes
 
 * Fixed an issue which could cause Each loop counters not to work properly with nested loops.

@@ -29,4 +29,11 @@ describe('Filter', function() {
       });
     });
   });
+  
+  it('should trow an helpful error when an invalid filter name is used', function(done) {
+    new Template('${name|foo@bar}').render({}, function onRendered(err, rendered) {
+      err.message.should.equal('Compilation error: Unable to parse filter `foo@bar`.');
+      done();
+    });
+  });
 });

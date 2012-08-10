@@ -40,6 +40,25 @@ describe('Tools', function() {
         done();
       });
     });
+    
+    it('should accept names with alphanumerical characters', function(done) {
+      tools.createFilter('Test_1', function(str, thing) {
+        return thing + str;
+      });
+      new kiwi.Template('${foo|Test_1("boo ")}').render({foo:'bar'}, function(err, rendered) {
+        if(err) return done(err);
+        rendered.should.equal('boo bar');
+        done();
+      });
+    });
+    
+    it('should throw an error when an invalid name us used', function() {
+      (function() {
+        tools.createFilter('Test@', function(str, thing) {
+          return thing + str;
+        });
+      }).should.throw(/is not a valid filter name.$/);
+    });
   });
 
   describe('createSimpleTag', function() {
@@ -124,6 +143,14 @@ describe('Tools', function() {
         rendered.should.equal('bar woo');
         done();
       });
+    });
+    
+    it('should throw an error when an invalid name us used', function() {
+      (function() {
+        tools.createSimpleTag('foo@', function(context) {
+          return 'bar';
+        });
+      }).should.throw(/is not a valid tag name.$/);
     });
   });
 });

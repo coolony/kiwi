@@ -1875,7 +1875,7 @@ var TAG_REPLACE_RE = /\$\{([^\}]*)\}/g;
 var TAG_PARSE_RE = /^(?:=|html)\s+(?:\:(\d+)\s+)?([^|]+)(?:\|(.*))?$/;
 var FILTER_SPLIT_RE = /\|(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
 var FILTER_SPLIT_ARGS_RE = /\,(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
-var FILTER_MATCH_RE = /^([a-z]+)\s*(?:\((.*)\))?$/i;
+var FILTER_MATCH_RE = /^(\w+)\s*(?:\((.*)\))?$/i;
 var DEFAULT_VARIABLE_FILTERS = ['escapeIfUnsafe'].map(JSON.stringify);
 var DEFAULT_HTML_FILTERS = [];
 
@@ -1952,8 +1952,15 @@ function createPrintTagCompiler(defaultFilters) {
     }
 
     var contents = parsed[2];
-    var filters = parsed[3] ? parseFilters(parsed[3], defaultFilters) :
-                              defaultFilters;
+    var filters;
+    
+    try {
+      filters = parsed[3] ? parseFilters(parsed[3], defaultFilters) :
+                            defaultFilters;
+    } catch(err) {
+      return callback(err);
+    }
+                              
     contents = '$tools.filter(' +
                contents +
                ', ' +
@@ -2001,27 +2008,44 @@ function createPrintTagCompiler(defaultFilters) {
 
 function parseFilters(filters, defaults) {
   var raw = false;
-  filters = filters.split(FILTER_SPLIT_RE)
-                   .filter(function filterOne(filter) {
-                     if(filter === 'raw') {
-                       raw = true;
-                       return false;
-                     }
-                     return true;
-                   })
-                   .map(function mapOne(filter) {
-                     filter = filter.match(FILTER_MATCH_RE);
-                     filter[1] = filter[1].replace('"', '\"');
-                     if(!filter[2]) {
-                       return '"' + filter[1] + '"';
-                     }
-                     var splittedArgs = filter[2].split(FILTER_SPLIT_ARGS_RE);
-                     return '["' + filter[1] + '", ' +
-                            splittedArgs.join(',') + ']';
-                   });
+  var splittedFilters = filters.split(FILTER_SPLIT_RE);
+  
+  if(!splittedFilters) {
+    throw new Error('Compilation error: Unable to parse filters `' +
+                    filters +
+                    '`.'
+                    );
+  }
+  
+  var parsedFilters = splittedFilters
+    .filter(function filterOne(filter) {
+      if(filter === 'raw') {
+        raw = true;
+        return false;
+      }
+      return true;
+    })
+    .map(function mapOne(filter) {
+      var parsedFilter = filter.match(FILTER_MATCH_RE);
+      
+      if(!parsedFilter) {
+        throw new Error('Compilation error: Unable to parse filter `' +
+                        filter +
+                        '`.'
+                        );
+      }
+      
+      parsedFilter[1] = parsedFilter[1].replace('"', '\"');
+      if(!parsedFilter[2]) {
+        return '"' + parsedFilter[1] + '"';
+      }
+      var splittedArgs = parsedFilter[2].split(FILTER_SPLIT_ARGS_RE);
+      return '["' + parsedFilter[1] + '", ' +
+             splittedArgs.join(',') + ']';
+    });
 
-  if(!raw) filters = filters.concat(defaults);
-  return _.uniq(filters);
+  if(!raw) parsedFilters = parsedFilters.concat(defaults);
+  return _.uniq(parsedFilters);
 }
 
 }); // module: tags/print.js
@@ -2988,6 +3012,8 @@ var utils = require('./utils');
  */
 
 var ARGS_SPLIT_RE = /\s+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
+var FILTER_NAME_RE = /^\w+$/;
+var TAG_NAME_RE = FILTER_NAME_RE;
 
 
 /**
@@ -2999,6 +3025,12 @@ var ARGS_SPLIT_RE = /\s+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
  */
 
 exports.createSimpleTag = function createSimpleTag(name, fn) {
+
+  // Check name
+  if(!name.match(TAG_NAME_RE)) {
+    throw new Error('Error:`' + name + '` is not a valid tag name.');
+  }
+
   token.helpers[name] = fn;
   token.tags[name] = {
     compile: function(token, compiledContents, compiler, callback) {
@@ -3025,6 +3057,12 @@ exports.createSimpleTag = function createSimpleTag(name, fn) {
  */
 
 exports.createFilter = function createFilter(name, fn) {
+
+  // Check name
+  if(!name.match(FILTER_NAME_RE)) {
+    throw new Error('Error:`' + name + '` is not a valid filter name.');
+  }
+
   filter.filters[name] = fn;
 };
 
