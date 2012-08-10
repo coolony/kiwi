@@ -283,7 +283,7 @@ new Template(tpl).render({ movies: [ 'Meet Joe Black', 'City Hunter' ] }, callba
 </ul>
 ```
 
-In order to maintain compatibility with earlier Kiwi releases, `_eachLoop` is provided as an alias for `$each`. This will be dropped in a next version.
+In order to maintain compatibility with earlier Kiwi releases, `_eachLoop` is provided as an alias for `$each`, and `$each.parentLoop` as an alias for `$each.parent`. This will be dropped in a future release.
 
 #### Empty clause
 
