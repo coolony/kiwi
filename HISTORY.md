@@ -1,6 +1,6 @@
 # Kiwi's History
 
-## Head
+## 0.2.1
 
 ### New features
 
