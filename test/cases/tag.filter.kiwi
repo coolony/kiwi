@@ -1,0 +1,4 @@
+{{filter replace('i','o','g')|capitalize}}${name}{{/filter}}
+{{filter capitalize|upper|lower}}${name}{{/filter}}
+{{filter replace('i','o','g')}}${name}{{/filter}}
+{{filter capitalize|replace('i','o','ig')}}foo ${name} bar{{/filter}}

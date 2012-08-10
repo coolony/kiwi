@@ -1179,7 +1179,7 @@ blockTag.compile = function(token, compiledContents,
 
   //console.log(compiledContents);
 
-  var compiled = '(function(parentAcc) {' +
+  var compiled = '(function(__parentAcc) {' +
                    'var __acc = [];' +
                    compiledContents +
                    'var __currentBlock = __acc.join("");' +
@@ -1209,7 +1209,7 @@ blockTag.compile = function(token, compiledContents,
                    '}' +
                    'var __joined = new String(__acc.join(""));' +
                    (mode ? ('__joined.mode = "' + mode + '";') : '') +
-                   'parentAcc.push(__joined);' +
+                   '__parentAcc.push(__joined);' +
                    '__blocks["' + name + '"] = __joined;' +
                  '})(__acc);';
 
@@ -1560,6 +1560,91 @@ helpers.extend = function(name, compiled, template, data, callback) {
 
 }); // module: tags/extend.js
 
+require.register("tags/filter.js", function(module, exports, require){
+/*!
+ * Coolony's Kiwi
+ * Copyright ©2012 Pierre Matri <pierre.matri@coolony.com>
+ * MIT Licensed
+ */
+
+
+/**
+ * Module dependencies
+ */
+ 
+var utils = require('../utils');
+ 
+ 
+/**
+ * Constants
+ */
+
+var FILTER_PARSE_RE = /^filter\s+(.+)$/;
+
+
+/**
+ * Global variables
+ */
+
+module.exports.tags = {};
+var filterTag = module.exports.tags.filter = {};
+
+
+/**
+ * Basic tag settings
+ */
+
+filterTag.isBlock = true;
+
+
+/**
+ * Compile `token` with `compiledContents` to JavaScript, and invoke
+ * `callback(err, compiled)`.
+ *
+ * @param {BlockToken} token
+ * @param {String} compiledContents
+ * @param {Function} callback
+ * @api private
+ */
+
+filterTag.compile = function(token, compiledContents,
+                             compiledIntermediate, compiler, callback) {
+
+  var parsed = token.tag.match(FILTER_PARSE_RE);
+
+  if(!parsed) {
+    return callback(new Error('Compilation error: Unable to parse tag `' +
+                              token.tag +
+                              '`.'
+                              ));
+  }
+  
+  var filters;
+  
+  try {
+    filters = utils.parseFilters(parsed[1]);
+  } catch(err) {
+    return callback(err);
+  }
+
+  var name = parsed[1];
+
+  var compiled = '(function(__parentAcc) {' +
+                   'var __acc = [];' +
+                   compiledContents +
+                   '__parentAcc.push(' +
+                     '$tools.filter(' +
+                       '__acc.join(""),' +
+                       '[' + filters.join(',') + ']' +
+                     ')' +
+                   ');' +
+                 '})(__acc);';
+
+  callback(null, compiled);
+};
+
+}); // module: tags/filter.js
+
 require.register("tags/if.js", function(module, exports, require){
 /*!
  * Coolony's Kiwi
@@ -1872,6 +1957,7 @@ require.register("tags/print.js", function(module, exports, require){
 
 
 var filter = require('../filter');
+var utils = require('../utils');
 
 
 /**
@@ -1880,9 +1966,6 @@ var filter = require('../filter');
 
 var TAG_REPLACE_RE = /\$\{([^\}]*)\}/g;
 var TAG_PARSE_RE = /^(?:=|html)\s+(?:\:(\d+)\s+)?([^|]+)(?:\|(.*))?$/;
-var FILTER_SPLIT_RE = /\|(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
-var FILTER_SPLIT_ARGS_RE = /\,(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
-var FILTER_MATCH_RE = /^(\w+)\s*(?:\((.*)\))?$/i;
 var DEFAULT_VARIABLE_FILTERS = ['escapeIfUnsafe'].map(JSON.stringify);
 var DEFAULT_HTML_FILTERS = [];
 
@@ -1962,7 +2045,7 @@ function createPrintTagCompiler(defaultFilters) {
     var filters;
     
     try {
-      filters = parsed[3] ? parseFilters(parsed[3], defaultFilters) :
+      filters = parsed[3] ? utils.parseFilters(parsed[3], defaultFilters) :
                             defaultFilters;
     } catch(err) {
       return callback(err);
@@ -2000,59 +2083,6 @@ function createPrintTagCompiler(defaultFilters) {
   };
 
   return compiler;
-}
-
-
-/**
- * Parse `filters` with `defaults`, and return the parsed string to include
- * in compiled template.
- *
- * @param {String} filters
- * @param {Mixed[]} defaults
- * @return {String}
- * @api private
- */
-
-function parseFilters(filters, defaults) {
-  var raw = false;
-  var splittedFilters = filters.split(FILTER_SPLIT_RE);
-  
-  if(!splittedFilters) {
-    throw new Error('Compilation error: Unable to parse filters `' +
-                    filters +
-                    '`.'
-                    );
-  }
-  
-  var parsedFilters = splittedFilters
-    .filter(function filterOne(filter) {
-      if(filter === 'raw') {
-        raw = true;
-        return false;
-      }
-      return true;
-    })
-    .map(function mapOne(filter) {
-      var parsedFilter = filter.match(FILTER_MATCH_RE);
-      
-      if(!parsedFilter) {
-        throw new Error('Compilation error: Unable to parse filter `' +
-                        filter +
-                        '`.'
-                        );
-      }
-      
-      parsedFilter[1] = parsedFilter[1].replace('"', '\"');
-      if(!parsedFilter[2]) {
-        return '"' + parsedFilter[1] + '"';
-      }
-      var splittedArgs = parsedFilter[2].split(FILTER_SPLIT_ARGS_RE);
-      return '["' + parsedFilter[1] + '", ' +
-             splittedArgs.join(',') + ']';
-    });
-
-  if(!raw) parsedFilters = parsedFilters.concat(defaults);
-  return _.uniq(parsedFilters);
 }
 
 }); // module: tags/print.js
@@ -3164,6 +3194,9 @@ var frame;
  */
 
 var DEFAULT_FILE_EXTENSION = '.kiwi';
+var FILTER_SPLIT_RE = /\|(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
+var FILTER_SPLIT_ARGS_RE = /\,(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
+var FILTER_MATCH_RE = /^(\w+)\s*(?:\((.*)\))?$/i;
 
 
 
@@ -3349,6 +3382,60 @@ exports.escapeCompiledString = function(str) {
 
 exports.isIterable = function(input) {
   return typeof input === 'object' && !(input instanceof String);
+};
+
+
+/**
+ * Parse `filters` with `defaults`, and return the parsed string to include
+ * in compiled template.
+ *
+ * @param {String} filters
+ * @param {Mixed[]} defaults
+ * @return {String}
+ * @api private
+ */
+
+exports.parseFilters = function(filters, defaults) {
+  var raw = false;
+  defaults = defaults || [];
+  var splittedFilters = filters.split(FILTER_SPLIT_RE);
+    
+  if(!splittedFilters) {
+    throw new Error('Compilation error: Unable to parse filters `' +
+                    filters +
+                    '`.'
+                    );
+  }
+    
+  var parsedFilters = splittedFilters
+    .filter(function filterOne(filter) {
+      if(filter === 'raw') {
+        raw = true;
+        return false;
+      }
+      return true;
+    })
+    .map(function mapOne(filter) {
+      var parsedFilter = filter.match(FILTER_MATCH_RE);
+        
+      if(!parsedFilter) {
+        throw new Error('Compilation error: Unable to parse filter `' +
+                        filter +
+                        '`.'
+                        );
+      }
+        
+      parsedFilter[1] = parsedFilter[1].replace('"', '\"');
+      if(!parsedFilter[2]) {
+        return '"' + parsedFilter[1] + '"';
+      }
+      var splittedArgs = parsedFilter[2].split(FILTER_SPLIT_ARGS_RE);
+      return '["' + parsedFilter[1] + '", ' +
+             splittedArgs.join(',') + ']';
+    });
+  
+    if(!raw) parsedFilters = parsedFilters.concat(defaults);
+    return _.uniq(parsedFilters);
 };
 
 

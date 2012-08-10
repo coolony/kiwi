@@ -511,7 +511,7 @@ new Template(tpl).render({}, callback);
 <div>${a}</div>
 ```
 
-### {{#}} and { {comment}}
+### {{#}} and {{comment}}
 
 These tags are comments, which are never rendered.
 
@@ -524,6 +524,21 @@ new Template(tpl).render({}, callback);
 
 // Result
 Kiwi
+```
+
+### {{filter}}
+
+The specified filters will be applied to the rendered markup between `{{filter}}` and `{{/filter}}`.
+
+```
+// Template
+{{filter upper|replace('K', 'W')}}Kiwi{{/filter}}
+
+// Code
+new Template(tpl).render({}, callback);
+
+// Result
+WIWI
 ```
 
 

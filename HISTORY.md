@@ -1,5 +1,11 @@
 # Kiwi's History
 
+## Head
+
+### New features
+
+* Added `filter` tag.
+
 ## 0.2.1
 
 ### New features
