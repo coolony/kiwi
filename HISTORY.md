@@ -2,10 +2,18 @@
 
 ## Head
 
+### New features
+
+* Added `$each.parentIndex` and `$each.parentValue` to Each loop counters, to allow easy access to parent loop current index and value with nested loops.
+
 ### Improvements
 
 * Added support for digits and underscores in tag and filter names.
 * Added helpful error messages when defining or using tag or filter names containing invalid characters.
+
+### Other changes
+
+* `$each.parentLoop` has been deprecated, and is replaced by `$each.parent`.
 
 ### Bug fixes
 

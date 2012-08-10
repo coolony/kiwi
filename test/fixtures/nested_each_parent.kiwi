@@ -1,0 +1,1 @@
+{{each data}}{{each $value}}${$each.parent.counter} ${$each.parentIndex} ${$each.parentValue|first} {{/each}}{{/each}}

@@ -1425,8 +1425,15 @@ eachTag.compile = function(token, compiledContents,
                     'revcounter: __eachLoopLength - __eachLoopCounter,' +
                     'first: __eachLoopCounter === 0,' +
                     'last: __eachLoopCounter + 1 === __eachLoopLength,' +
-                    'parentLoop: __parentEachLoop' +
+                    'parentLoop: __parentEachLoop,' +
+                    'parent: __parentEachLoop,' +
+                    '_index: ' + indexVariable + ',' +
+                    '_value: ' + elementVariable +
                   '};' +
+                  'if(__parentEachLoop) {' +
+                    '$each.parentIndex = __parentEachLoop._index;' +
+                    '$each.parentValue = __parentEachLoop._value;' +
+                  '}' +
                   compiledContents +
                   '__eachLoopCounter++;' +
                 '});';
