@@ -390,6 +390,22 @@ new Template(tpl2).render({ nested: nested }, callback);
 <div>Hello!</div>
 ```
 
+#### Passing additional context to parent template
+
+```
+// foo.kiwi
+Hello, ${name}!
+
+// Template
+<div>${name} says: {{include "foo" childContext}}</div>
+
+// Code
+new Template(tpl).render({ name: 'Tom', childContext: { name: 'Bob' }}, callback);
+
+// Result
+<div>Tom says: Hello, Bob!</div>
+```
+
 ### {{block}}
 
 #### Basic usage
@@ -428,7 +444,7 @@ Hello, {{block place}}world{{/block}}, dear {{block name}}user{{/block}}!
 new Template(tpl).render({}, callback);
 
 // Result
-<div>Hello, big world, dear user 42!</div>
+Hello, big world, dear user 42!
 ```
 
 #### Parent
@@ -447,7 +463,7 @@ When using block tag with `{{extend}}`, you may want to inclue parent block mark
 new Template(tpl).render({}, callback);
 
 // Result
-<div>I just wanted to say « Welcome! »</div>
+I just wanted to say « Welcome! »
 ```
 
 
@@ -487,7 +503,7 @@ Hello, {{block place}}world{{/block}}!
 new Template(tpl2).render({}, callback);
 
 // Result
-<div>Hello, kiwi!</div>
+Hello, kiwi!
 ```
 
 #### Using directly another `Template` instance
@@ -505,7 +521,24 @@ var parent = new Template(tpl1);
 new Template(tpl2).render({ parent: parent }, callback);
 
 // Result
-<div>Hello, kiwi!</div>
+Hello, kiwi!
+```
+
+#### Passing additional context to parent template
+
+```
+// foo.kiwi
+${name} says: {{block message}}Nothing...{{/block}}!
+
+// Template
+{{extend parent parentContext}}
+{{block place}}Hello, ${name}{{/block}}
+
+// Code
+new Template(tpl).render({ name: 'Tom', parentContext: { message: 'Bob' }}, callback);
+
+// Result
+Bob says: Hello, Tom!
 ```
 
 ### {{raw}}

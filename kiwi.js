@@ -1479,6 +1479,7 @@ var utils = require('../utils');
  */
 
 var EXTEND_PARSE_RE = /^extend\s+(.+)$/;
+var EXTEND_ARGS_SPLIT_RE = /\s+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
 
 
 /**
@@ -1515,20 +1516,25 @@ extendTag.compile = function(token, compiledContents, compiler, callback) {
   }
 
   var parsed = token.tag.match(EXTEND_PARSE_RE);
+  var parsedArgs = parsed ? parsed[1].split(EXTEND_ARGS_SPLIT_RE) : null;
 
-  if(!parsed) {
+  if(!parsed || !parsedArgs) {
     return callback(new Error('Compilation error: Unable to parse tag `' +
                               token.tag +
                               '`.'
                               ));
   }
 
-  var name = parsed[1];
+  var name = parsedArgs[0];
+  var compiledInclude = parsedArgs[1] ? 
+                          ('_.extend($data, ' + parsedArgs[1] + ')') :
+                          '$data';
 
   var compiled = 'var __originalCallback = $callback;' +
                  '$callback = function(err, compiled) {' +
                    '$helpers.extend(' + name + ', __compiled, $template,' +
-                                    '$data, __originalCallback);' +
+                                    compiledInclude +
+                                    ', __originalCallback);' +
                  '};';
 
   callback(null, compiled);
@@ -1868,7 +1874,8 @@ var utils = require('../utils');
  * Constants
  */
 
-var INCLUDE_PARSE_RE = /^include\s+(.+)$/;
+var INCLUDE_PARSE_RE = /^include\s+(.+)?$/;
+var INCLUDE_ARGS_SPLIT_RE = /\s+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)/g;
 
 
 /**
@@ -1899,19 +1906,25 @@ includeTag.isBlock = false;
 
 includeTag.compile = function(token, compiledContents, compiler, callback) {
   var parsed = token.tag.match(INCLUDE_PARSE_RE);
+  var parsedArgs = parsed ? parsed[1].split(INCLUDE_ARGS_SPLIT_RE) : null;
 
-  if(!parsed) {
+  if(!parsed || !parsedArgs) {
     return callback(new Error('Compilation error: Unable to parse tag `' +
                               token.tag +
                               '`.'
                               ));
   }
 
-  var name = parsed[1];
+  var name = parsedArgs[0];
+  
+  var compiledInclude = parsedArgs[1] ? 
+                          ('_.extend($data, ' + parsedArgs[1] + ')') :
+                          '$data';
 
   compiler.__compilationEnd.unshift('});');
   var compiled = '$helpers.include(' + name + ', $template,' +
-                                    '$data, function(err, rendered) {' +
+                                   compiledInclude + ', ' +
+                                   'function(err, rendered) {' +
                    '__acc.push(rendered);';
 
   callback(null, compiled);
@@ -2365,11 +2378,11 @@ Template.prototype.render = function(data, callback) {
   // Support callback as 1st arg
   if(_.isFunction(data) && !callback){
     callback = data;
-    data = {};
+    data = null;
   }
 
-  // Data defaults
-  if(!data) data = {};
+  // Data defaults and / or cloning
+  data = data ? _.clone(data) : data;
 
   // Check whether we have the compiled template ready in the object or in cache
   var cacheKey = 'template::' + this._cacheKey();

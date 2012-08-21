@@ -19,12 +19,12 @@ describe('Extend tag', function() {
   it('should extend template', function(done) {
 
     function onLoaded(err, data) {
-      should.not.exist(err);
+      if(err) return done(err);
       template.render({}, onRendered)
     }
 
     function onRendered(err, rendered) {
-      should.not.exist(err);
+      if(err) return done(err);
       rendered.trim().should.equal('foo doo woo roo');
       done(err);
     }
@@ -35,12 +35,12 @@ describe('Extend tag', function() {
   it('should extend template with dynamic parent', function(done) {
 
     function onLoaded(err, data) {
-      should.not.exist(err);
+      if(err) return done(err);
       template.render({parent: 'intermediate'}, onRendered)
     }
 
     function onRendered(err, rendered) {
-      should.not.exist(err);
+      if(err) return done(err);
       rendered.trim().should.equal('foo doo woo moo');
       done(err);
     }
@@ -50,26 +50,43 @@ describe('Extend tag', function() {
   
   it('should extend template with Template instance as parent', function(done) {
   
-      var parentTemplate = new Template({ cache: true });
+    var parentTemplate = new Template({ cache: true });
       
-      function onParentTemplateLoaded(err, data) {
-        should.not.exist(err);
-        template.loadFile(__dirname + '/../fixtures/dynamic.kiwi', onLoaded);
-      }
+    function onParentTemplateLoaded(err, data) {
+      if(err) return done(err);
+      template.loadFile(__dirname + '/../fixtures/dynamic.kiwi', onLoaded);
+    }
   
-      function onLoaded(err, data) {
-        should.not.exist(err);
-        template.render({parent: parentTemplate}, onRendered)
-      }
+    function onLoaded(err, data) {
+      if(err) return done(err);
+      template.render({parent: parentTemplate}, onRendered)
+    }
   
-      function onRendered(err, rendered) {
-        should.not.exist(err);
-        rendered.trim().should.equal('foo doo woo moo');
-        done(err);
-      }
+    function onRendered(err, rendered) {
+      if(err) return done(err);
+      rendered.trim().should.equal('foo doo woo moo');
+      done(err);
+    }
       
-      parentTemplate.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onParentTemplateLoaded);
-    });
+    parentTemplate.loadFile(__dirname + '/../fixtures/intermediate.kiwi', onParentTemplateLoaded);
+  });
+  
+  it('should extend template with additional context', function(done) {
+  
+    function onLoaded(err, data) {
+      if(err) return done(err);
+      template.render({someContext: {somevar: 'HWYHO'}}, onRendered)
+    }
+  
+    function onRendered(err, rendered) {
+      if(err) return done(err);
+      rendered.trim().should.equal('before inside HWYHO stillinside after');
+      done();
+    }
+  
+    template.loadFile(__dirname + '/../fixtures/extend_context.kiwi', onLoaded);
+  });
+    
 
   it('should properly cache paths', function(done) {
     var calls = 0;
@@ -80,14 +97,14 @@ describe('Extend tag', function() {
     }
 
     function onFirstRender(err, rendered) {
-      should.not.exist(err);
+      if(err) return done(err);
       rendered.trim().should.equal('foo doo woo loo');
       calls.should.equal(1);
       template.render({}, onSecondRender)
     }
 
     function onSecondRender(err, rendered) {
-      should.not.exist(err);
+      if(err) return done(err);
       rendered.trim().should.equal('foo doo woo loo');
       calls.should.equal(1);
       done(err);

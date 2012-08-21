@@ -8,7 +8,7 @@
 var should = require('should');
 var Template = require('../../lib/template');
 
-describe('Extend tag', function() {
+describe('Include tag', function() {
 
   it('should include template with Template instance as child', function(done) {
   

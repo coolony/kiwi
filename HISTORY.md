@@ -5,6 +5,8 @@
 ### New features
 
 * Added `filter` tag.
+* Added an option to pass additional context to parent / child template with `extend` / `include` tags.
+* Added cloning of data object when rendering a template.
 
 ## 0.2.1
 
