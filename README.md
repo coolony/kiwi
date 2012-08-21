@@ -59,6 +59,22 @@ npm install kiwi
 npm install https://github.com/coolony/kiwi/tarball/master
 ```
 
+## Client-side installation
+
+### Self-hosted
+
+Just include `kiwi.min.js`, and you're good to go!
+
+### Client-side CDN version
+
+Kiwi is also available as a CDN-hosted version, for free, courtesy of CDNJS / CloudFlare.
+
+```<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/kiwi/0.2.1/kiwi.min.js"><script>```
+
+### Client-side dependencies
+
+Please note that client-side usage requires [Underscore.js](http://underscorejs.org/) to be included in the page. This requirement will be removed in a future release.
+
 ## Usage
 
 ### Loading a template from string
@@ -93,10 +109,6 @@ var template = new kiwi.Template().loadAndRender('template.kiwi', { name: "Kiwi"
   console.log('Rendered template is: ' + rendered);
 });
 ```
-
-### Client-side dependencies
-
-Please note that client-side usage requires [Underscore.js](http://underscorejs.org/) to be included in the page. This requirement will be removed in a future release.
 
 
 ## Accessing variables
