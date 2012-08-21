@@ -69,7 +69,9 @@ Just include `kiwi.min.js`, and you're good to go!
 
 Kiwi is also available as a CDN-hosted version, for free, courtesy of CDNJS / CloudFlare.
 
-```<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/kiwi/0.2.1/kiwi.min.js"><script>```
+```html
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/kiwi/0.2.1/kiwi.min.js"><script>
+```
 
 ### Client-side dependencies
 
