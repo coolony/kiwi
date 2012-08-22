@@ -1526,8 +1526,10 @@ extendTag.compile = function(token, compiledContents, compiler, callback) {
   }
 
   var name = parsedArgs[0];
-  var compiledInclude = parsedArgs[1] ? 
-                          ('_.extend($data, ' + parsedArgs[1] + ')') :
+  var compiledInclude = parsedArgs[1] ?
+                          ('_.extend($data, ' +
+                            parsedArgs.splice(1).join(' ') +
+                            ')') :
                           '$data';
 
   var compiled = 'var __originalCallback = $callback;' +
@@ -1916,9 +1918,11 @@ includeTag.compile = function(token, compiledContents, compiler, callback) {
   }
 
   var name = parsedArgs[0];
-  
-  var compiledInclude = parsedArgs[1] ? 
-                          ('_.extend($data, ' + parsedArgs[1] + ')') :
+
+  var compiledInclude = parsedArgs[1] ?
+                          ('_.extend($data, ' +
+                            parsedArgs.splice(1).join(' ') +
+                            ')') :
                           '$data';
 
   compiler.__compilationEnd.unshift('});');
@@ -2524,20 +2528,20 @@ Template.prototype._renderRelative = function(name, data, rendered, callback) {
     if(err) return callback(err);
     callback(null, result);
   }
-  
+
   if(name instanceof Template) {
-  
+
     template = name;
     template.options._parent = rendered;
     template.render(data, onTemplateRendered);
-    
+
   } else {
-  
+
     var options = _.clone(this.options);
     options._parent = rendered;
     template = new Template(options);
     cacheKey = 'path::' + this._cacheKey() + '::' + name;
-    
+
     // Handle cache
     if(this.options.cache) {
       cachedPath = this._getCache().get(cacheKey);

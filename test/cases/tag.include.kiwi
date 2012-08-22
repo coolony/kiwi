@@ -1,3 +1,4 @@
 {{include "../fixtures/root.kiwi"}}
 {{include "../fixtures/leaf"}}
 {{include "../fixtures/var" objt}}
+{{include "../fixtures/var" { foo: 'barwoo' } }}
