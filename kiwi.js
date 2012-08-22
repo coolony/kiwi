@@ -178,13 +178,19 @@ Compiler.prototype.compile = function(callback) {
   function onCompiled(err, compiled) {
     if(err) return callback(err);
 
-    var func = new Function("$template",
-                            "$tools",
-                            "_",
-                            "$data",
-                            "$helpers",
-                            "$callback",
-                            compiled);
+    var func;
+
+    try {
+      func = new Function("$template",
+                          "$tools",
+                          "_",
+                          "$data",
+                          "$helpers",
+                          "$callback",
+                          compiled);
+    } catch(err) {
+      return callback(err);
+    }
 
     func.$helpers = _this.helpers;
 
