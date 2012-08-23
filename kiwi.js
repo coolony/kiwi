@@ -1202,12 +1202,12 @@ blockTag.compile = function(token, compiledContents,
                    'if(_.isUndefined(__blocks["' + name + '"]) ||' +
                       '__blocks["' + name + '"].mode) {' +
                      'if(__blocks["' + name + '"] &&' +
-                        '__blocks["' + name + '"].mode == "append") {' +
+                        '__blocks["' + name + '"].mode == "prepend") {' +
                        '__acc.push(__blocks["' + name + '"]);' +
                      '}' +
                      '__acc.push(__currentBlock);' +
                      'if(__blocks["' + name + '"] &&' +
-                        '__blocks["' + name + '"].mode == "prepend") {' +
+                        '__blocks["' + name + '"].mode == "append") {' +
                        '__acc.push(__blocks["' + name + '"]);' +
                      '}' +
                    '} else {' +
