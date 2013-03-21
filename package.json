@@ -1,7 +1,7 @@
 {
   "name": "kiwi",
   "description": "Simple, modular, fast and lightweight template engine, based on jQuery templates syntax.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Pierre Matri <pierre.matri@coolony.com>",
   "contributors": [
     { "name": "Pierre Matri", "email": "pierre.matri@coolony.com" }
@@ -15,7 +15,8 @@
     "mocha": "*",
     "should": "*",
     "uglify-js": "*",
-    "jshint": "*"
+    "jshint": "*",
+    "commander": "*"
   },
   "keywords": ["kiwi", "asynchronous", "template", "web", "express", "engine", "html"],
     "repository": "git://github.com/coolony/kiwi",

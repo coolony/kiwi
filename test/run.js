@@ -9,7 +9,7 @@
  * Module dependencies
  */
 
-var kiwi = require('../');
+var kiwi = require('../index');
 var tools = kiwi.tools;
 var fs = require('fs');
 var basename = require('path').basename;
